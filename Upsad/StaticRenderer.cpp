@@ -1,14 +1,14 @@
 #include "StaticRenderer.h"
 
-void StaticRenderer::addInstance(const RawModel * model)//Replace with Instance
+void StaticRenderer::addInstance(const Instance * instance)//Replace with Instance
 {
 	//Replace this(int) with instance
-	std::map<const RawModel*, std::vector<int>>::iterator pos = models.find(model);//instance->getModel()
+	std::map<const RawModel*, std::vector<const Instance*>>::iterator pos = models.find(instance->getModel());
 	if (pos!=models.end()) {
-		//pos->second.push_back(instance);
+		pos->second.push_back(instance);
 	}
 	else {
-		models.insert(std::pair<const RawModel*, std::vector<int>>(model, std::vector<int>{0}));
+		models.insert(std::pair<const RawModel*, std::vector<const Instance*>>(instance->getModel(), std::vector<const Instance*>{instance}));
 	}
 }
 
@@ -30,12 +30,12 @@ void StaticRenderer::render()
 {
 	//replace int with instance
 	prepare();
-	std::map<const RawModel*, std::vector<int>>::iterator modelIT;
+	std::map<const RawModel*, std::vector<const Instance*>>::iterator modelIT;
 	for (modelIT = models.begin(); modelIT != models.end(); modelIT++) {
 		const RawModel* model = modelIT->first;
 		prepareModel(model);
-		std::vector<int> instances=modelIT->second;
-		std::vector<int>::iterator instanceIT;
+		std::vector<const Instance*> instances=modelIT->second;
+		std::vector<const Instance*>::iterator instanceIT;
 
 		for (instanceIT = instances.begin(); instanceIT != instances.end(); instanceIT++) {
 			//prepareInstance(*instanceIT);

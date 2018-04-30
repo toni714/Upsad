@@ -140,12 +140,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Instance.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelHelper.cpp" />
     <ClCompile Include="RawModel.cpp" />
     <ClCompile Include="StaticRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Instance.h" />
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="ModelHelper.h" />
     <ClInclude Include="StaticRenderer.h" />

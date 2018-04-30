@@ -7,6 +7,7 @@
 #include "ModelHelper.h"
 #include "RawModel.h"
 #include "StaticRenderer.h"
+#include "Instance.h"
 
 #include <chrono>//DEBUG
 #include <thread>//DEBUG
@@ -95,8 +96,10 @@ int main() {
 	//Init Model
 	model = modelHelper->loadToVAO(vertices, indices);
 
+	Instance* instance = new Instance(model);
+
 	StaticRenderer sr;
-	sr.addInstance(model);
+	sr.addInstance(instance);
 
 	//Main Loop
 	while (!glfwWindowShouldClose(window)) {
