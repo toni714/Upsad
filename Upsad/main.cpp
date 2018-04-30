@@ -6,6 +6,7 @@
 
 #include "ModelHelper.h"
 #include "RawModel.h"
+#include "StaticRenderer.h"
 
 #include <chrono>//DEBUG
 #include <thread>//DEBUG
@@ -21,6 +22,8 @@ std::vector<GLuint> indices=
 {
 	1,2,3
 };
+
+RawModel* model;
 
 namespace UPSAD {
 	const int WIDTH = 800;
@@ -67,6 +70,14 @@ void initGL() {
 
 }
 
+void render() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//
+	glBindVertexArray(model->getVaoID());//
+	//glDrawArrays(GL_TRIANGLES, 0, model->getVertexCount()); //Without Index-Buffer
+	glDrawElements(GL_TRIANGLES, model->getVertexCount(), GL_UNSIGNED_SHORT, 0);
+	glBindVertexArray(0);
+}
+
 int main() {
 	using namespace UPSAD;
 	try{
@@ -80,18 +91,18 @@ int main() {
 	
 	ModelHelper* modelHelper = new ModelHelper();
 	
+
 	//Init Model
-	RawModel* model = modelHelper->loadToVAO(vertices, indices);
+	model = modelHelper->loadToVAO(vertices, indices);
+
+	StaticRenderer sr;
+	sr.addInstance(model);
 
 	//Main Loop
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glBindVertexArray(model->getVaoID());
-		//glDrawArrays(GL_TRIANGLES, 0, model->getVertexCount()); //Without Index-Buffer
-		glDrawElements(GL_TRIANGLES, model->getVertexCount(), GL_UNSIGNED_SHORT, 0);
-		glBindVertexArray(0);
+		sr.render();
 
 		glfwSwapBuffers(window);
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));

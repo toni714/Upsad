@@ -11,12 +11,12 @@ RawModel::~RawModel()
 {
 }
 
-GLuint RawModel::getVaoID()
+GLuint RawModel::getVaoID()const
 {
 	return vaoID;
 }
 
-int RawModel::getVertexCount()
+int RawModel::getVertexCount()const
 {
 	return vertexCount;
 }

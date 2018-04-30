@@ -13,7 +13,7 @@ public:
 	RawModel(GLuint vaoID, int vertexCount);
 	~RawModel();//TODO delete vao + vbos and remove this model from Loader
 
-	GLuint getVaoID();
-	int getVertexCount();
+	GLuint getVaoID() const;
+	int getVertexCount() const;
 };
 
