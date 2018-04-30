@@ -10,6 +10,6 @@ private:
 	std::vector<GLuint> vaos;
 	std::vector<GLuint> vbos;
 public:
-	RawModel * loadToVAO(std::vector<GLfloat> vertices);
+	RawModel * loadToVAO(std::vector<GLfloat> vertices, std::vector<GLuint> indices);
 	~ModelHelper();
 };

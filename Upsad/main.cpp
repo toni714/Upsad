@@ -17,6 +17,11 @@ std::vector<GLfloat> vertices =
 	0.0f,  0.5f, 0.0f
 };
 
+std::vector<GLuint> indices=
+{
+	1,2,3
+};
+
 namespace UPSAD {
 	const int WIDTH = 800;
 	const int HEIGHT = 600;
@@ -76,15 +81,16 @@ int main() {
 	ModelHelper* modelHelper = new ModelHelper();
 	
 	//Init Model
-	RawModel* model = modelHelper->loadToVAO(vertices);
+	RawModel* model = modelHelper->loadToVAO(vertices, indices);
 
 	//Main Loop
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glBindVertexArray(model->getVaoID());
-		glDrawArrays(GL_TRIANGLES, 0, (model->getVertexCount() / 3));
+		//glDrawArrays(GL_TRIANGLES, 0, model->getVertexCount()); //Without Index-Buffer
+		glDrawElements(GL_TRIANGLES, model->getVertexCount(), GL_UNSIGNED_SHORT, 0);
 		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);
