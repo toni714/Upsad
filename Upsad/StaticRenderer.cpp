@@ -19,6 +19,7 @@ void StaticRenderer::clearQueue()
 
 void StaticRenderer::prepare() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	shader.start();
 }
 
 void StaticRenderer::prepareModel(const RawModel * model)
@@ -43,5 +44,5 @@ void StaticRenderer::render()
 		}
 	}
 	glBindVertexArray(0);
-
+	shader.stop();
 }

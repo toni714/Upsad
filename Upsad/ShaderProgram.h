@@ -19,6 +19,8 @@ protected:
 public:
 	ShaderProgram();
 	~ShaderProgram();
+	void start();
+	void stop();
 
 };
 

@@ -8,6 +8,16 @@ ShaderProgram::~ShaderProgram()
 {
 }
 
+void ShaderProgram::start()
+{
+	glUseProgram(programID);
+}
+
+void ShaderProgram::stop()
+{
+	glUseProgram(0);
+}
+
 GLuint ShaderProgram::loadShader(const GLchar * source, GLenum type)
 {
 	GLuint shaderID;
