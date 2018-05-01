@@ -145,12 +145,14 @@
     <ClCompile Include="ModelHelper.cpp" />
     <ClCompile Include="RawModel.cpp" />
     <ClCompile Include="StaticRenderer.cpp" />
+    <ClCompile Include="StaticShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Instance.h" />
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="ModelHelper.h" />
     <ClInclude Include="StaticRenderer.h" />
+    <ClInclude Include="StaticShader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
