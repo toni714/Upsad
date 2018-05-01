@@ -2,12 +2,12 @@
 
 #include<glad\glad.h>
 
-#include <stdexcept>
-#include <iostream>
+#include "ShaderProgram.h"
 
-class StaticShader
+class StaticShader:public virtual ShaderProgram
 {
 private:
+	
 	const GLchar* vertexSource=
 		"#version 330\n"
 		"in  vec3 pos;\n"
@@ -26,12 +26,7 @@ private:
 		"}"
 		;
 
-	GLuint vertexID;
-	GLuint fragmentID;
-
-	GLuint programID;
-
-
+	void bindAttributes();
 public:
 	StaticShader();
 	~StaticShader();
