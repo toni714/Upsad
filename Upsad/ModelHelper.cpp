@@ -16,7 +16,7 @@ RawModel * ModelHelper::loadToVAO(std::vector<GLfloat> vertices, std::vector<GLu
 
 	glEnableVertexAttribArray(0);														//Enable Positions Attribute
 	//             location, dimensions, type, normalized, dim*size(type), offset(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);	//Bind Positions Attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);	//Bind Positions Attribute
 
 	//EXTRACT
 

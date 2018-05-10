@@ -14,13 +14,15 @@
 
 std::vector<GLfloat> vertices =
 {
-	-1.f, -1.f, 0.0f,
-	1.f, -1.f, 0.0f,
-	0.0f,  1.f, 0.0f
+	-0.5,-0.5,0.5,
+	0.5,-0.5,0.5,
+	0.5,0.5,0.5,
+	-0.5,0.5,0.5
 };
 
 std::vector<GLuint> indices=
 {
+	0,1,3,
 	1,2,3
 };
 
@@ -69,14 +71,6 @@ void initGL() {
 
 	glViewport(0, 0, screenWidth, screenHeight);
 
-}
-
-void render() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//
-	glBindVertexArray(model->getVaoID());//
-	//glDrawArrays(GL_TRIANGLES, 0, model->getVertexCount()); //Without Index-Buffer
-	glDrawElements(GL_TRIANGLES, model->getVertexCount(), GL_UNSIGNED_SHORT, 0);
-	glBindVertexArray(0);
 }
 
 int main() {

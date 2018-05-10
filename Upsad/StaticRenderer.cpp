@@ -40,7 +40,7 @@ void StaticRenderer::render()
 
 		for (instanceIT = instances.begin(); instanceIT != instances.end(); instanceIT++) {
 			//prepareInstance(*instanceIT);
-			glDrawElements(GL_TRIANGLES, model->getVertexCount(), GL_UNSIGNED_SHORT, 0);
+			glDrawElements(GL_TRIANGLES, model->getVertexCount(), GL_UNSIGNED_INT, 0);
 		}
 	}
 	glBindVertexArray(0);
