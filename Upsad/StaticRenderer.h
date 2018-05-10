@@ -9,12 +9,15 @@
 
 class StaticRenderer {
 private:
-	std::map<const RawModel*, std::vector<const Instance*>> models;//Model, Instances
+	std::map<const RawModel*, std::vector<const Instance*>> models;
 	void prepare();
 	void prepareModel(const RawModel* model);
+	void prepareInstance(const Instance* instance);
 	StaticShader shader;
+	float inc;
 public:
-	void addInstance(const Instance* instance);//Swap this for Instance
+	StaticRenderer();
+	void addInstance(const Instance* instance);
 	void clearQueue();
 	void render();
 };

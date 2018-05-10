@@ -13,18 +13,34 @@
 #include <chrono>//DEBUG
 #include <thread>//DEBUG
 
+#include <glm\vec3.hpp>
+
 std::vector<GLfloat> vertices =
 {
-	-0.5,-0.5,0.5,
-	0.5,-0.5,0.5,
-	0.5,0.5,0.5,
-	-0.5,0.5,0.5
+	-1, -1, -1,
+	1, -1, -1,
+	1, 1, -1,
+	-1, 1, -1,
+	-1, -1, 1,
+	1, -1, 1,
+	1, 1, 1,
+	-1, 1, 1
 };
 
 std::vector<GLuint> indices=
 {
-	0,1,3,
-	1,2,3
+	0, 1, 3,
+	3, 1, 2,
+	1, 5, 2,
+	2, 5, 6,
+	5, 4, 6,
+	6, 4, 7,
+	4, 0, 7,
+	7, 0, 3,
+	3, 2, 7,
+	7, 2, 6,
+	4, 5, 0,
+	0, 5, 1
 };
 
 WindowManager* windowManager;
@@ -57,18 +73,17 @@ int main() {
 		modelHelper = new ModelHelper();
 		
 		model = modelHelper->loadToVAO(vertices, indices);
-		instance = new Instance(model);
+		instance = new Instance(model, glm::vec3(0,0,0), glm::vec3(0,0,0), 1);
 
 		StaticRenderer sr;
 		sr.addInstance(instance);
 
 		while (!windowManager->shouldClose()) {
 			windowManager->pollEvents();
-
 			sr.render();
 
 			windowManager->swapBuffers();
-			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			std::this_thread::sleep_for(std::chrono::milliseconds(17));
 		}
 	}
 	catch (std::runtime_error e) {

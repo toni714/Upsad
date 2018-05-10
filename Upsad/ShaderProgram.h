@@ -14,8 +14,10 @@ protected:
 
 	static GLuint loadShader(const GLchar* source, GLenum type);
 	void bindAttribute(GLuint index, const GLchar* attribute);
+	GLint getUnifromLocation(const GLchar* name);
 	void linkProgram();
 	virtual void bindAttributes();//all baseclasses need to overwrite this!!
+	virtual void getAllUniformLocations();//all baseclasses need to overwrite this!!
 public:
 	ShaderProgram();
 	~ShaderProgram();

@@ -79,7 +79,7 @@
     <LibraryPath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1_build\src\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1\include;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glad\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\glm_single;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1\include;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glad\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1_build\src\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

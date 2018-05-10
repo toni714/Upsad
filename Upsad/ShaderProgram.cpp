@@ -6,6 +6,12 @@ ShaderProgram::ShaderProgram()
 
 ShaderProgram::~ShaderProgram()
 {
+	stop();
+	glDetachShader(programID, vertexID);
+	glDetachShader(programID, fragmentID);
+	glDeleteShader(vertexID);
+	glDeleteShader(fragmentID);
+	glDeleteProgram(programID);
 }
 
 void ShaderProgram::start()
@@ -48,8 +54,9 @@ void ShaderProgram::bindAttribute(GLuint index, const GLchar * attribute)
 	glBindAttribLocation(programID, index, attribute);
 }
 
-void ShaderProgram::bindAttributes()
+GLint ShaderProgram::getUnifromLocation(const GLchar * name)
 {
+	return glGetUniformLocation(programID, name);
 }
 
 void ShaderProgram::linkProgram()
@@ -57,7 +64,6 @@ void ShaderProgram::linkProgram()
 	programID = glCreateProgram();
 	glAttachShader(programID, vertexID);
 	glAttachShader(programID, fragmentID);
-
 
 	bindAttributes();
 
@@ -78,4 +84,14 @@ void ShaderProgram::linkProgram()
 		free(log);
 		throw std::runtime_error("Failed to Link Shader-Program.");
 	}
+}
+
+//These are just to satisfy the linker (=0 dosen't work)
+
+void ShaderProgram::bindAttributes()
+{
+}
+
+void ShaderProgram::getAllUniformLocations()
+{
 }
