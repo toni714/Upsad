@@ -147,6 +147,7 @@
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="StaticRenderer.cpp" />
     <ClCompile Include="StaticShader.cpp" />
+    <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Instance.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="StaticRenderer.h" />
     <ClInclude Include="StaticShader.h" />
+    <ClInclude Include="WindowManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

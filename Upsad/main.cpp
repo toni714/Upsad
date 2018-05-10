@@ -8,6 +8,7 @@
 #include "RawModel.h"
 #include "StaticRenderer.h"
 #include "Instance.h"
+#include "WindowManager.h"
 
 #include <chrono>//DEBUG
 #include <thread>//DEBUG
@@ -26,89 +27,56 @@ std::vector<GLuint> indices=
 	1,2,3
 };
 
+WindowManager* windowManager;
+ModelHelper* modelHelper;
+
 RawModel* model;
+Instance* instance;
 
 namespace UPSAD {
 	const int WIDTH = 800;
 	const int HEIGHT = 600;
-	GLFWwindow* window;
+	const char* TITLE = "Hello OpenGL";
 }
 
-void initWindow() {
-	using namespace UPSAD;
-	//Init GLFW
-	if (!glfwInit()) {
-		throw std::runtime_error("Error! Failed to initialize the Windowing Library!");
+void cleanup() {
+	if (model != nullptr) {
+		delete model;
 	}
-	//Setup Window
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //OSX
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
-	//Create Window
-	window = glfwCreateWindow(WIDTH, HEIGHT, "OpenGL Tutorial", nullptr, nullptr);
-
-	if (window == NULL) {
-		glfwTerminate();
-		throw std::runtime_error("Error! Failed to create Window");
+	if (modelHelper != nullptr) {
+		delete modelHelper;
 	}
-	glfwMakeContextCurrent(window);
-
-}
-
-void initGL() {
-	using namespace UPSAD;
-	//Init GLAD/OpenGL
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		throw std::runtime_error("Error! Failed to initialize OpenGL");
+	if (windowManager != nullptr) {
+		delete windowManager;
 	}
-
-	int screenWidth, screenHeight;
-	glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
-
-	glViewport(0, 0, screenWidth, screenHeight);
-
 }
 
 int main() {
-	using namespace UPSAD;
-	try{
-		initWindow();
-		initGL();
+	try {
+		windowManager = new WindowManager(UPSAD::WIDTH, UPSAD::HEIGHT, UPSAD::TITLE);
+		modelHelper = new ModelHelper();
+		
+		model = modelHelper->loadToVAO(vertices, indices);
+		instance = new Instance(model);
+
+		StaticRenderer sr;
+		sr.addInstance(instance);
+
+		while (!windowManager->shouldClose()) {
+			windowManager->pollEvents();
+
+			sr.render();
+
+			windowManager->swapBuffers();
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		}
 	}
 	catch (std::runtime_error e) {
 		std::cerr << e.what() << std::endl;
+		cleanup();
 		return EXIT_FAILURE;
 	}
-	
-	ModelHelper* modelHelper = new ModelHelper();
-	
 
-	//Init Model
-	model = modelHelper->loadToVAO(vertices, indices);
-
-	Instance* instance = new Instance(model);
-
-	StaticRenderer sr;
-	sr.addInstance(instance);
-
-	//Main Loop
-	while (!glfwWindowShouldClose(window)) {
-		glfwPollEvents();
-
-		sr.render();
-
-		glfwSwapBuffers(window);
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	}
-
-	delete model;
-	delete modelHelper;
-
-	//Quit
-	glfwTerminate();
+	cleanup();
 	return EXIT_SUCCESS;
 }
