@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-#include "ModelHelper.h"
+#include "Utility.h"
 #include "RawModel.h"
 #include "StaticRenderer.h"
 #include "Instance.h"
@@ -44,7 +44,6 @@ std::vector<GLuint> indices=
 };
 
 WindowManager* windowManager;
-ModelHelper* modelHelper;
 
 RawModel* model;
 Instance* instance;
@@ -59,8 +58,8 @@ void cleanup() {
 	if (model != nullptr) {
 		delete model;
 	}
-	if (modelHelper != nullptr) {
-		delete modelHelper;
+	if (Utility::modelHelper != nullptr) {
+		delete Utility::modelHelper;
 	}
 	if (windowManager != nullptr) {
 		delete windowManager;
@@ -70,9 +69,9 @@ void cleanup() {
 int main() {
 	try {
 		windowManager = new WindowManager(UPSAD::WIDTH, UPSAD::HEIGHT, UPSAD::TITLE);
-		modelHelper = new ModelHelper();
+		Utility::modelHelper = new ModelHelper();
 		
-		model = modelHelper->loadToVAO(vertices, indices);
+		model = Utility::modelHelper->loadToVAO(vertices, indices);
 		instance = new Instance(model, glm::vec3(0,0,0), glm::vec3(0,0,0), 1);
 
 		StaticRenderer sr;
@@ -89,6 +88,7 @@ int main() {
 	catch (std::runtime_error e) {
 		std::cerr << e.what() << std::endl;
 		cleanup();
+		system("pause");
 		return EXIT_FAILURE;
 	}
 

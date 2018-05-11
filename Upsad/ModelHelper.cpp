@@ -44,11 +44,29 @@ RawModel * ModelHelper::loadToVAO(std::vector<GLfloat> vertices, std::vector<GLu
 
 	glBindVertexArray(0);	//Unbind VAO (Safety)
 
-	return new RawModel(vaoID, static_cast<int>(indices.size()));
+	return new RawModel(vaoID, indices.size());
+}
+
+GLuint ModelHelper::loadTexture(GLuint width, GLuint height, uint8_t * data)
+{
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	GLint mode = GL_RGB;
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, mode, width, height, 0, mode, GL_UNSIGNED_BYTE, data);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	textures.push_back(textureID);
+	return textureID;
 }
 
 ModelHelper::~ModelHelper()
 {
-	glDeleteBuffers(static_cast<int>(vbos.size()), vbos.data());
-	glDeleteVertexArrays(static_cast<int>(vaos.size()), vaos.data());
+	glDeleteTextures(textures.size(), textures.data());
+	glDeleteBuffers(vbos.size(), vbos.data());
+	glDeleteVertexArrays(vaos.size(), vaos.data());
 }

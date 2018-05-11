@@ -139,7 +139,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FileUtil.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="ImageTexture.cpp" />
     <ClCompile Include="Instance.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelHelper.cpp" />
@@ -147,16 +149,27 @@
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="StaticRenderer.cpp" />
     <ClCompile Include="StaticShader.cpp" />
+    <ClCompile Include="Utility.cpp" />
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FileUtil.h" />
+    <ClInclude Include="ImageTexture.h" />
     <ClInclude Include="Instance.h" />
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="ModelHelper.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="StaticRenderer.h" />
     <ClInclude Include="StaticShader.h" />
+    <ClInclude Include="Utility.h" />
     <ClInclude Include="WindowManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.frag" />
+    <None Include="shader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="test.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

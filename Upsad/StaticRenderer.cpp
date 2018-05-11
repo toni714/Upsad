@@ -45,13 +45,15 @@ void StaticRenderer::prepareInstance(const Instance * instance)
 {
 	glm::mat4 mvp=glm::mat4(1.0);
 	mvp=glm::translate(mvp, instance->getPos());
+	mvp = glm::translate(mvp, glm::vec3(0,0,-5));
 	glm::vec3 rot = instance->getRot();
-	mvp=glm::scale(mvp, glm::vec3(instance->getScale()*0.5));
+	mvp=glm::scale(mvp, glm::vec3(instance->getScale()*0.5f));
 	mvp = glm::rotate(mvp, rot.x, glm::vec3(1, 0, 0));
 	mvp = glm::rotate(mvp, rot.y, glm::vec3(0, 1, 0));
 	mvp = glm::rotate(mvp, rot.z, glm::vec3(0, 0, 1));
-	mvp=glm::rotate(mvp, inc, glm::vec3(5, 8, 13));
-	inc += 0.01;
+	mvp=glm::rotate(mvp, inc, glm::vec3(0, 1, 0));
+	inc += 0.01f;
+	mvp = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f)*mvp;
 	shader.loadMVPMatrix(mvp);
 }
 
