@@ -14,4 +14,3 @@ public:
 	RawModel* getModel();
 	ImageTexture* getTexture();
 };
-

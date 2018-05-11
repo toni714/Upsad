@@ -1,6 +1,5 @@
 #include "WindowManager.h"
 
-
 void WindowManager::setWindowHints(const int& versionMajor, const int& versionMinor, const int& openGLProfile, const int& resizeable)
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, versionMajor);
@@ -16,10 +15,10 @@ WindowManager::WindowManager(const int & width, const int & height, const char *
 	if (!glfwInit()) {
 		throw std::runtime_error("Error! Failed to initialize the Windowing Library!");
 	}
-	setWindowHints(4,0,GLFW_OPENGL_CORE_PROFILE,GLFW_FALSE);
+	setWindowHints(4, 0, GLFW_OPENGL_CORE_PROFILE, GLFW_FALSE);
 
 	window = glfwCreateWindow(width, height, title, nullptr, nullptr);
-	
+
 	if (window == NULL) {
 		throw std::runtime_error("Error! Failed to create Window");
 	}

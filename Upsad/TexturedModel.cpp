@@ -1,7 +1,7 @@
 #include "TexturedModel.h"
 
 TexturedModel::TexturedModel(RawModel* model, ImageTexture* texture)
-	:model(model),texture(texture)
+	:model(model), texture(texture)
 {
 }
 

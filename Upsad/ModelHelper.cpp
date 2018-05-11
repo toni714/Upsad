@@ -22,18 +22,18 @@ template<typename T>
 void ModelHelper::bufferData(std::vector<T> data, const int& attribute, const int& dimensions, const GLenum& type)
 {
 	createVBO(GL_ARRAY_BUFFER);
-	glBufferData(GL_ARRAY_BUFFER, data.size()*sizeof(T), data.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(T), data.data(), GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(attribute);
 	glVertexAttribPointer(attribute, dimensions, type, GL_FALSE, 0, nullptr);
 }
 
 RawModel * ModelHelper::loadToVAO(const std::vector<GLfloat>& vertices, const std::vector<GLfloat>& uvs, const std::vector<GLuint>& indices) {
-	GLuint vaoID=createVAO();
+	GLuint vaoID = createVAO();
 
 	bufferData(vertices, 0, 3, GL_FLOAT);
 	bufferData(uvs, 1, 2, GL_FLOAT);
-	
+
 	createVBO(GL_ELEMENT_ARRAY_BUFFER);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 
@@ -68,7 +68,7 @@ GLuint ModelHelper::loadTexture(GLuint width, GLuint height, uint8_t * data)
 ModelHelper::~ModelHelper()
 {
 	glDeleteTextures(textures.size(), textures.data());
-	
+
 	glDeleteBuffers(vbos.size(), vbos.data());
 	glDeleteVertexArrays(vaos.size(), vaos.data());
 

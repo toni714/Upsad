@@ -17,7 +17,7 @@ GLuint FileUtil::load_BMP(const char * const filename)
 	uint8_t* pixels = nullptr; // Pixels
 
 	BITMAPFILEHEADER* bmpHeader = nullptr; // Header
-	BITMAPINFOHEADER* bmpInfo = nullptr; // Info 
+	BITMAPINFOHEADER* bmpInfo = nullptr; // Info
 
 										 // The file... We open it with it's constructor
 	std::ifstream file(filename, std::ios::binary);
@@ -65,8 +65,7 @@ GLuint FileUtil::load_BMP(const char * const filename)
 	GLuint w = bmpInfo->biWidth;
 	GLuint h = bmpInfo->biHeight;
 
-
-	GLuint textureID=Utility::modelHelper->loadTexture(w, h, pixels);
+	GLuint textureID = Utility::modelHelper->loadTexture(w, h, pixels);
 	// Delete the two buffers.
 	delete[] datBuff[0];
 	delete[] datBuff[1];
@@ -98,7 +97,6 @@ RawModel * FileUtil::loadOBJ(const char * filename)
 				vertexAttributes.vertices[3 * index.vertex_index + 0],
 				vertexAttributes.vertices[3 * index.vertex_index + 1],
 				vertexAttributes.vertices[3 * index.vertex_index + 2]
-
 			};
 
 			glm::vec3 normal = {
@@ -112,14 +110,13 @@ RawModel * FileUtil::loadOBJ(const char * filename)
 				vertexAttributes.texcoords[2 * index.texcoord_index + 1]
 			};
 
-			Vertex vert(pos, normal, uv );
+			Vertex vert(pos, normal, uv);
 
 			if (vertices.count(vert) == 0) {
 				vertices[vert] = vertices.size();
 				m_vertices.push_back(vert);
 			}
 			m_indices.push_back(vertices[vert]);
-
 		}
 	}
 

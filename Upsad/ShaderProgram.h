@@ -23,6 +23,4 @@ public:
 	~ShaderProgram();
 	void start();
 	void stop();
-
 };
-

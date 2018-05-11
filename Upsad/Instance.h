@@ -20,4 +20,3 @@ public:
 	glm::vec3 getRot() const;
 	int getScale() const;
 };
-

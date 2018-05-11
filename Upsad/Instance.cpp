@@ -1,7 +1,7 @@
 #include "Instance.h"
 
 Instance::Instance(TexturedModel* texModel, const glm::vec3& pos, const glm::vec3& rot, const int& scale)
-	:texModel(texModel),pos(pos),rot(rot),scale(scale)
+	:texModel(texModel), pos(pos), rot(rot), scale(scale)
 {
 }
 

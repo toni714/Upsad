@@ -16,4 +16,3 @@ public:
 	void pollEvents() const;
 	void swapBuffers() const;
 };
-

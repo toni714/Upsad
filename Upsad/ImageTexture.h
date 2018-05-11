@@ -11,4 +11,3 @@ public:
 	~ImageTexture();
 	GLuint getID() const;
 };
-

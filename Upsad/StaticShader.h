@@ -7,11 +7,11 @@
 #include "FileUtil.h"
 #include "ShaderProgram.h"
 
-class StaticShader:public virtual ShaderProgram
+class StaticShader :public virtual ShaderProgram
 {
 private:
-	const char* vertexFile="shader.vert";
-	const char* fragmentFile="shader.frag";
+	const char* vertexFile = "shader.vert";
+	const char* fragmentFile = "shader.frag";
 	GLint location_MVP;
 	void bindAttributes();
 public:
@@ -20,4 +20,3 @@ public:
 	void getAllUniformLocations();
 	void loadMVPMatrix(const glm::mat4& mvp);
 };
-

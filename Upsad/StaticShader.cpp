@@ -8,12 +8,10 @@ void StaticShader::bindAttributes()
 
 StaticShader::StaticShader()
 {
-
 	vertexID = loadShader(FileUtil::loadFile(vertexFile).c_str(), GL_VERTEX_SHADER);
-	fragmentID = loadShader(FileUtil::loadFile(fragmentFile).c_str() , GL_FRAGMENT_SHADER);
+	fragmentID = loadShader(FileUtil::loadFile(fragmentFile).c_str(), GL_FRAGMENT_SHADER);
 	linkProgram();
 }
-
 
 StaticShader::~StaticShader()
 {

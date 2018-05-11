@@ -18,7 +18,6 @@ public:
 	bool operator==(const Vertex &other) const {
 		return pos == other.pos&&uvCoord == other.uvCoord&&normal == other.normal;
 	}
-
 };
 
 namespace std {

@@ -16,4 +16,3 @@ public:
 	GLuint getVaoID() const;
 	int getVertexCount() const;
 };
-
