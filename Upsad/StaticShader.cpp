@@ -3,6 +3,7 @@
 void StaticShader::bindAttributes()
 {
 	bindAttribute(0, "pos");
+	bindAttribute(1, "uv");
 }
 
 StaticShader::StaticShader()

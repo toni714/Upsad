@@ -51,6 +51,7 @@ artifacts/
 *.ilk
 *.meta
 *.obj
+!Upsad/*.obj
 *.pch
 *.pdb
 *.pgc

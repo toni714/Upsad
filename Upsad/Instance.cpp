@@ -1,7 +1,7 @@
 #include "Instance.h"
 
-Instance::Instance(RawModel* model, const glm::vec3& pos, const glm::vec3& rot, const int& scale)
-	:model(model),pos(pos),rot(rot),scale(scale)
+Instance::Instance(TexturedModel* texModel, const glm::vec3& pos, const glm::vec3& rot, const int& scale)
+	:texModel(texModel),pos(pos),rot(rot),scale(scale)
 {
 }
 
@@ -9,9 +9,9 @@ Instance::~Instance()
 {
 }
 
-RawModel * Instance::getModel() const
+TexturedModel * Instance::getTexModel() const
 {
-	return model;
+	return texModel;
 }
 
 glm::vec3 Instance::getPos() const

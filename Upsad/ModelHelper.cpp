@@ -28,11 +28,11 @@ void ModelHelper::bufferData(std::vector<T> data, const int& attribute, const in
 	glVertexAttribPointer(attribute, dimensions, type, GL_FALSE, 0, nullptr);
 }
 
-RawModel * ModelHelper::loadToVAO(std::vector<GLfloat> vertices, std::vector<GLuint> indices) {
+RawModel * ModelHelper::loadToVAO(const std::vector<GLfloat>& vertices, const std::vector<GLfloat>& uvs, const std::vector<GLuint>& indices) {
 	GLuint vaoID=createVAO();
 
 	bufferData(vertices, 0, 3, GL_FLOAT);
-
+	bufferData(uvs, 1, 2, GL_FLOAT);
 	
 	createVBO(GL_ELEMENT_ARRAY_BUFFER);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
@@ -61,12 +61,19 @@ GLuint ModelHelper::loadTexture(GLuint width, GLuint height, uint8_t * data)
 	glTexImage2D(GL_TEXTURE_2D, 0, mode, width, height, 0, mode, GL_UNSIGNED_BYTE, data);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	textures.push_back(textureID);
+	textureData.push_back(data);
 	return textureID;
 }
 
 ModelHelper::~ModelHelper()
 {
 	glDeleteTextures(textures.size(), textures.data());
+	
 	glDeleteBuffers(vbos.size(), vbos.data());
 	glDeleteVertexArrays(vaos.size(), vaos.data());
+
+	//This crashes....
+	/*for (auto it = textureData.begin(); it != textureData.end(); it++) {
+		delete[] * it;
+	}*/
 }

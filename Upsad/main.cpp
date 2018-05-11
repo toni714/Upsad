@@ -9,6 +9,8 @@
 #include "StaticRenderer.h"
 #include "Instance.h"
 #include "WindowManager.h"
+#include "ImageTexture.h"
+#include "TexturedModel.h"
 
 #include <chrono>//DEBUG
 #include <thread>//DEBUG
@@ -17,14 +19,39 @@
 
 std::vector<GLfloat> vertices =
 {
-	-1, -1, -1,
-	1, -1, -1,
-	1, 1, -1,
-	-1, 1, -1,
-	-1, -1, 1,
-	1, -1, 1,
-	1, 1, 1,
-	-1, 1, 1
+	- 1.000000, - 1.000000, 1.000000,
+	- 1.000000, 1.000000, 1.000000,
+	- 1.000000, - 1.000000, - 1.000000,
+	- 1.000000, 1.000000, - 1.000000,
+	1.000000, - 1.000000, 1.000000,
+	1.000000, 1.000000, 1.000000,
+	1.000000, - 1.000000, - 1.000000,
+	1.000000, 1.000000, - 1.000000
+};
+
+std::vector<GLfloat> uvs = {
+	0.000000, 0.000000,
+	0.000000, 1.000000,
+	1.000000, 1.000000,
+	1.000000, 0.000000,
+	0.000000, 0.000000,
+	0.000000, 1.000000,
+	1.000000, 1.000000,
+	1.000000, 0.000000,
+	0.000000, 0.000000,
+	0.000000, 1.000000,
+	- 1.000000, 1.000000,
+	- 1.000000, 0.000000,
+	0.000000, 0.000000,
+	0.000000, 1.000000,
+	- 1.000000, 1.000000,
+	- 1.000000, 0.000000,
+	1.000000, - 1.000000,
+	0.000000, - 1.000000,
+	0.000000, 0.000000,
+	- 1.000000, 0.000000,
+	- 1.000000, - 1.000000,
+	0.000000, - 1.000000,
 };
 
 std::vector<GLuint> indices=
@@ -71,15 +98,18 @@ int main() {
 		windowManager = new WindowManager(UPSAD::WIDTH, UPSAD::HEIGHT, UPSAD::TITLE);
 		Utility::modelHelper = new ModelHelper();
 		
-		model = Utility::modelHelper->loadToVAO(vertices, indices);
-		instance = new Instance(model, glm::vec3(0,0,0), glm::vec3(0,0,0), 1);
+		model=FileUtil::loadOBJ("cube.obj");
+		//model = Utility::modelHelper->loadToVAO(vertices, uvs, indices);
+		GLuint textureID = FileUtil::load_BMP("test2.bmp");
+		ImageTexture* texture = new ImageTexture(textureID);
+		TexturedModel* texModel = new TexturedModel(model, texture);
+		instance = new Instance(texModel, glm::vec3(0,0,0), glm::vec3(0,0,0), 1);
 
 		StaticRenderer sr;
-		sr.addInstance(instance);
 
 		while (!windowManager->shouldClose()) {
 			windowManager->pollEvents();
-			sr.render();
+			sr.render(instance);
 
 			windowManager->swapBuffers();
 			std::this_thread::sleep_for(std::chrono::milliseconds(17));
