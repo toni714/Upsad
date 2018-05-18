@@ -6,6 +6,7 @@
 #include "RawModel.h"
 #include "Instance.h"
 #include "StaticShader.h"
+#include "Light.h"
 
 class StaticRenderer {
 private:

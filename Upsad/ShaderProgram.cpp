@@ -1,7 +1,11 @@
 #include "ShaderProgram.h"
 
-ShaderProgram::ShaderProgram()
+ShaderProgram::ShaderProgram(const std::string& vertexFile, const std::string& fragmentFile)
 {
+	vertexID = loadShader(FileUtil::loadFile(vertexFile.c_str()).c_str(), GL_VERTEX_SHADER);
+	fragmentID = loadShader(FileUtil::loadFile(fragmentFile.c_str()).c_str(), GL_FRAGMENT_SHADER);
+	linkProgram();
+	getAllUniformLocations();
 }
 
 ShaderProgram::~ShaderProgram()
@@ -57,6 +61,16 @@ void ShaderProgram::bindAttribute(GLuint index, const GLchar * attribute)
 GLint ShaderProgram::getUnifromLocation(const GLchar * name)
 {
 	return glGetUniformLocation(programID, name);
+}
+
+void ShaderProgram::loadMatrix(GLint location, const glm::mat4& mat)
+{
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void ShaderProgram::loadVec3(GLint location, const glm::vec3 & vec)
+{
+	glUniform3fv(location, 1, glm::value_ptr(vec));
 }
 
 void ShaderProgram::linkProgram()

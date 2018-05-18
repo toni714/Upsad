@@ -26,21 +26,21 @@ void ModelHelper::bufferData(std::vector<T> data, const int& attribute, const in
 
 	glEnableVertexAttribArray(attribute);
 	glVertexAttribPointer(attribute, dimensions, type, GL_FALSE, 0, nullptr);
+	glDisableVertexAttribArray(attribute);
 }
 
-RawModel * ModelHelper::loadToVAO(const std::vector<GLfloat>& vertices, const std::vector<GLfloat>& uvs, const std::vector<GLuint>& indices) {
+RawModel * ModelHelper::loadToVAO(const std::vector<GLfloat>& vertices, const std::vector<GLfloat>& uvs, const std::vector<GLfloat>& normals, const std::vector<GLuint>& indices) {
 	GLuint vaoID = createVAO();
 
 	bufferData(vertices, 0, 3, GL_FLOAT);
 	bufferData(uvs, 1, 2, GL_FLOAT);
+	bufferData(normals, 2, 3, GL_FLOAT);
 
 	createVBO(GL_ELEMENT_ARRAY_BUFFER);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
 
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);			//Is this good practice?
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);	//Is this good Practice?
-
-	glDisableVertexAttribArray(0);
 
 	glBindVertexArray(0);	//Unbind VAO (Safety)
 

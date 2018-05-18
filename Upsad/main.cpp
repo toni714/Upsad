@@ -44,11 +44,11 @@ int main() {
 		windowManager = new WindowManager(UPSAD::WIDTH, UPSAD::HEIGHT, UPSAD::TITLE);
 		Utility::modelHelper = new ModelHelper();
 
-		model = FileUtil::loadOBJ("cube.obj");
+		model = FileUtil::loadOBJ("dragon_low.obj");
 		GLuint textureID = FileUtil::load_BMP("test2.bmp");
 		ImageTexture* texture = new ImageTexture(textureID);
 		TexturedModel* texModel = new TexturedModel(model, texture);
-		instance = new Instance(texModel, glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 1);
+		instance = new Instance(texModel, glm::vec3(0, -2, -5), glm::vec3(0, 0, 0), 1);
 
 		StaticRenderer sr;
 

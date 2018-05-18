@@ -143,6 +143,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="ImageTexture.cpp" />
     <ClCompile Include="Instance.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelHelper.cpp" />
     <ClCompile Include="RawModel.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="FileUtil.h" />
     <ClInclude Include="ImageTexture.h" />
     <ClInclude Include="Instance.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="ModelHelper.h" />
     <ClInclude Include="ShaderProgram.h" />
@@ -178,6 +180,11 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="cube.obj">
+      <FileType>Document</FileType>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="dragon.obj">
       <FileType>Document</FileType>
     </Text>
   </ItemGroup>

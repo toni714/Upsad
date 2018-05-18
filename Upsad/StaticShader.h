@@ -4,19 +4,26 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "FileUtil.h"
 #include "ShaderProgram.h"
+#include "Light.h"
 
-class StaticShader :public virtual ShaderProgram
+class StaticShader :public ShaderProgram
 {
 private:
-	const char* vertexFile = "shader.vert";
-	const char* fragmentFile = "shader.frag";
-	GLint location_MVP;
+	const std::string vertexFile = "shader.vert";
+	const std::string fragmentFile = "shader.frag";
+	GLint location_modelMatrix;
+	GLint location_viewMatrix;
+	GLint location_projectionMatrix;
+	GLint location_lightPos;
+	GLint location_lightColor;
+
 	void bindAttributes();
 public:
 	StaticShader();
 	~StaticShader();
-	void getAllUniformLocations();
-	void loadMVPMatrix(const glm::mat4& mvp);
+	virtual void getAllUniformLocations();
+	void loadModelMatrix(const glm::mat4& mat);
+	void loadProjectionMatrix(const glm::mat4& mat);
+	void loadLight(const Light& light);
 };

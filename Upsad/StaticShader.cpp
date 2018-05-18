@@ -4,13 +4,13 @@ void StaticShader::bindAttributes()
 {
 	bindAttribute(0, "pos");
 	bindAttribute(1, "uv");
+	bindAttribute(2, "normal");
 }
 
 StaticShader::StaticShader()
+	:ShaderProgram("shader.vert", "shader.frag")
 {
-	vertexID = loadShader(FileUtil::loadFile(vertexFile).c_str(), GL_VERTEX_SHADER);
-	fragmentID = loadShader(FileUtil::loadFile(fragmentFile).c_str(), GL_FRAGMENT_SHADER);
-	linkProgram();
+	getAllUniformLocations();
 }
 
 StaticShader::~StaticShader()
@@ -19,10 +19,25 @@ StaticShader::~StaticShader()
 
 void StaticShader::getAllUniformLocations()
 {
-	location_MVP = getUnifromLocation("MVP");
+	start();
+	location_modelMatrix = getUnifromLocation("modelMatrix");
+	location_projectionMatrix = getUnifromLocation("projectionMatrix");
+	location_lightPos = getUnifromLocation("lightPos");
+	location_lightColor = getUnifromLocation("lightColor");
 }
 
-void StaticShader::loadMVPMatrix(const glm::mat4& mvp)
+void StaticShader::loadModelMatrix(const glm::mat4& mat)
 {
-	glUniformMatrix4fv(location_MVP, 1, GL_FALSE, glm::value_ptr(mvp));
+	loadMatrix(location_modelMatrix, mat);
+}
+
+void StaticShader::loadProjectionMatrix(const glm::mat4 & mat)
+{
+	loadMatrix(location_projectionMatrix, mat);
+}
+
+void StaticShader::loadLight(const Light & light)
+{
+	loadVec3(location_lightPos, light.getPos());
+	loadVec3(location_lightColor, light.getColor());
 }

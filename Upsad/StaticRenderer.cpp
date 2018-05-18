@@ -56,8 +56,10 @@ void StaticRenderer::prepareInstance(const Instance * instance)
 	mvp = glm::rotate(mvp, rot.z, glm::vec3(0, 0, 1));
 	mvp = glm::rotate(mvp, inc, glm::vec3(0, 1, 0));
 	inc += 0.01f;
-	mvp = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f)*mvp;
-	shader.loadMVPMatrix(mvp);
+	
+	shader.loadModelMatrix(mvp);
+	glm::mat4 pm = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f)*mvp;
+	shader.loadProjectionMatrix(pm);
 	prepareTexture(instance->getTexModel()->getTexture());
 }
 
@@ -96,6 +98,7 @@ void StaticRenderer::render(const Instance * instance)
 	glBindVertexArray(model->getVaoID());
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texModel->getTexture()->getID());
@@ -110,12 +113,15 @@ void StaticRenderer::render(const Instance * instance)
 	mvp = glm::rotate(mvp, rot.z, glm::vec3(0, 0, 1));
 	mvp = glm::rotate(mvp, inc, glm::vec3(0, 1, 0));
 	inc += 0.01f;
-	mvp = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f)*mvp;
-	shader.loadMVPMatrix(mvp);
+	shader.loadModelMatrix(mvp);
+	shader.loadProjectionMatrix(glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f));
+	shader.loadLight(Light(glm::vec3(-5, -1, 4), glm::vec3(1,1,1)));
+
 	prepareTexture(texModel->getTexture());
 	glDrawElements(GL_TRIANGLES, model->getVertexCount(), GL_UNSIGNED_INT, 0);
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 	glBindVertexArray(0);
 	shader.stop();
 }

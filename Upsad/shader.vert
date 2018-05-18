@@ -2,12 +2,20 @@
 
 in vec3 pos;
 in vec2 uv;
-
-uniform mat4 MVP;
+in vec3 normal;
 
 out vec2 uv_frag;
+out vec3 normal_frag;
+out vec3 lightVector;
+
+uniform mat4 modelMatrix;
+uniform mat4 projectionMatrix;
+uniform vec3 lightPos;
 
 void main(void) {
-	gl_Position = MVP*vec4(pos, 1.0);
+	vec4 worldPos=modelMatrix*vec4(pos, 1.0);
+	gl_Position = projectionMatrix*worldPos;
 	uv_frag=uv;
+	normal_frag=(modelMatrix*vec4(normal, 0.0)).xyz;
+	lightVector=lightPos-worldPos.xyz;
 }

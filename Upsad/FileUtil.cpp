@@ -90,7 +90,6 @@ RawModel * FileUtil::loadOBJ(const char * filename)
 	std::vector<unsigned int> m_indices = std::vector<unsigned int>();
 
 	std::unordered_map<Vertex, uint32_t> vertices;
-
 	for (tinyobj::shape_t shape : shapes) {
 		for (tinyobj::index_t index : shape.mesh.indices) {
 			glm::vec3 pos = {
@@ -98,20 +97,17 @@ RawModel * FileUtil::loadOBJ(const char * filename)
 				vertexAttributes.vertices[3 * index.vertex_index + 1],
 				vertexAttributes.vertices[3 * index.vertex_index + 2]
 			};
-
 			glm::vec3 normal = {
 				vertexAttributes.normals[3 * index.normal_index + 0],
 				vertexAttributes.normals[3 * index.normal_index + 1],
 				vertexAttributes.normals[3 * index.normal_index + 2]
 			};
-
-			glm::vec2 uv = {//Are they flipped?
+			glm::vec2 uv = {
 				vertexAttributes.texcoords[2 * index.texcoord_index + 0],
 				vertexAttributes.texcoords[2 * index.texcoord_index + 1]
 			};
 
 			Vertex vert(pos, normal, uv);
-
 			if (vertices.count(vert) == 0) {
 				vertices[vert] = vertices.size();
 				m_vertices.push_back(vert);
@@ -119,7 +115,6 @@ RawModel * FileUtil::loadOBJ(const char * filename)
 			m_indices.push_back(vertices[vert]);
 		}
 	}
-
 	std::vector<float> u_vertices = std::vector<float>();
 	std::vector<float> u_uvs = std::vector<float>();
 	std::vector<float> u_normals = std::vector<float>();
@@ -133,6 +128,5 @@ RawModel * FileUtil::loadOBJ(const char * filename)
 		u_normals.push_back(it->normal.y);
 		u_normals.push_back(it->normal.z);
 	}
-	//normals are missing here
-	return Utility::modelHelper->loadToVAO(u_vertices, u_uvs, m_indices);
+	return Utility::modelHelper->loadToVAO(u_vertices, u_uvs, u_normals, m_indices);
 }

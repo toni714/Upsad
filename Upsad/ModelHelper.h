@@ -2,6 +2,7 @@
 
 #include <glad\glad.h>
 #include <vector>
+#include <iostream>
 
 #include "RawModel.h"
 
@@ -16,7 +17,7 @@ private:
 	template<typename T>
 	void bufferData(std::vector<T> data, const int& attribute, const int& dimensions, const GLenum& type);
 public:
-	RawModel * loadToVAO(const std::vector<GLfloat>& vertices, const std::vector<GLfloat>& uvs, const std::vector<GLuint>& indices);
+	RawModel * loadToVAO(const std::vector<GLfloat>& vertices, const std::vector<GLfloat>& uvs, const std::vector<GLfloat>& normals, const std::vector<GLuint>& indices);
 	GLuint loadTexture(GLuint width, GLuint height, uint8_t* data);
 	~ModelHelper();
 };
