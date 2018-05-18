@@ -45,17 +45,18 @@ int main() {
 		Utility::modelHelper = new ModelHelper();
 
 		model = FileUtil::loadOBJ("dragon_low.obj");
-		GLuint textureID = FileUtil::load_BMP("test2.bmp");
+		GLuint textureID = FileUtil::load_BMP("test3.bmp");
 		ImageTexture* texture = new ImageTexture(textureID);
 		TexturedModel* texModel = new TexturedModel(model, texture);
-		instance = new Instance(texModel, glm::vec3(0, -2, -5), glm::vec3(0, 0, 0), 1);
+		instance = new Instance(texModel, glm::vec3(0, -2, -10), glm::vec3(0, 0, 0), 1);
 
 		StaticRenderer sr;
 
 		while (!windowManager->shouldClose()) {
 			windowManager->pollEvents();
-			sr.render(instance);
-
+			sr.addInstance(instance);
+			sr.render();
+			sr.clearQueue();
 			windowManager->swapBuffers();
 			std::this_thread::sleep_for(std::chrono::milliseconds(17));
 		}

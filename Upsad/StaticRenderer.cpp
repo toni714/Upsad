@@ -10,18 +10,18 @@ StaticRenderer::StaticRenderer()
 
 void StaticRenderer::addInstance(const Instance * instance)
 {
-	std::map<const RawModel*, std::vector<const Instance*>>::iterator pos = models.find(instance->getTexModel()->getModel());
-	if (pos != models.end()) {
+	std::map<const RawModel*, std::vector<const Instance*>>::iterator pos = queue.find(instance->getTexModel()->getModel());
+	if (pos != queue.end()) {
 		pos->second.push_back(instance);
 	}
 	else {
-		models.insert(std::pair<const RawModel*, std::vector<const Instance*>>(instance->getTexModel()->getModel(), std::vector<const Instance*>{instance}));
+		queue.insert(std::pair<const RawModel*, std::vector<const Instance*>>(instance->getTexModel()->getModel(), std::vector<const Instance*>{instance}));
 	}
 }
 
 void StaticRenderer::clearQueue()
 {
-	models.clear();
+	queue.clear();
 }
 
 void StaticRenderer::prepare() {
@@ -30,98 +30,57 @@ void StaticRenderer::prepare() {
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
-
 	shader.start();
+	shader.loadProjectionMatrix(glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f));//only do this once
+	shader.loadLight(Light(glm::vec3(-5, -1, 4), glm::vec3(1, 1, 1)));//only do this on updata
 }
 
 void StaticRenderer::prepareModel(const RawModel * model)
 {
 	glBindVertexArray(model->getVaoID());
 	glEnableVertexAttribArray(0);
-}
-
-void StaticRenderer::prepareTexture(const ImageTexture * texture)
-{
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 }
 
 void StaticRenderer::prepareInstance(const Instance * instance)
 {
-	glm::mat4 mvp = glm::mat4(1.0);
-	mvp = glm::translate(mvp, instance->getPos());
-	mvp = glm::translate(mvp, glm::vec3(0, 0, -5));
+	glm::mat4 modelMatrix = glm::mat4(1.0);
+	modelMatrix = glm::translate(modelMatrix, instance->getPos());
+
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(instance->getScale()*0.5f));
+
 	glm::vec3 rot = instance->getRot();
-	mvp = glm::scale(mvp, glm::vec3(instance->getScale()*0.5f));
-	mvp = glm::rotate(mvp, rot.x, glm::vec3(1, 0, 0));
-	mvp = glm::rotate(mvp, rot.y, glm::vec3(0, 1, 0));
-	mvp = glm::rotate(mvp, rot.z, glm::vec3(0, 0, 1));
-	mvp = glm::rotate(mvp, inc, glm::vec3(0, 1, 0));
+	modelMatrix = glm::rotate(modelMatrix, rot.x, glm::vec3(1, 0, 0));
+	modelMatrix = glm::rotate(modelMatrix, rot.y + inc, glm::vec3(0, 1, 0));
+	modelMatrix = glm::rotate(modelMatrix, rot.z, glm::vec3(0, 0, 1));
 	inc += 0.01f;
-	
-	shader.loadModelMatrix(mvp);
-	glm::mat4 pm = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f)*mvp;
-	shader.loadProjectionMatrix(pm);
+	shader.loadModelMatrix(modelMatrix);
 	prepareTexture(instance->getTexModel()->getTexture());
+}
+
+void StaticRenderer::prepareTexture(const ImageTexture * texture)
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture->getID());
 }
 
 void StaticRenderer::render()
 {
-	//replace int with instance
 	prepare();
-	auto modelIT = models.begin();
-	for (; modelIT != models.end(); modelIT++) {
-		const RawModel* model = modelIT->first;
+	for (auto queueIT = queue.begin(); queueIT != queue.end(); queueIT++) {
+		const RawModel* model = queueIT->first;
 		prepareModel(model);
-		std::vector<const Instance*> instances = modelIT->second;
-		auto instanceIT = instances.begin();
-		for (; instanceIT != instances.end(); instanceIT++) {
+		for (auto instanceIT = queueIT->second.begin(); instanceIT != queueIT->second.end(); instanceIT++) {
 			prepareInstance(*instanceIT);
+
 			glDrawElements(GL_TRIANGLES, model->getVertexCount(), GL_UNSIGNED_INT, 0);
 		}
 		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(1);
+		glDisableVertexAttribArray(2);
 	}
-	glBindVertexArray(0);
-	shader.stop();
-}
 
-void StaticRenderer::render(const Instance * instance)
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-	glCullFace(GL_BACK);
-	glFrontFace(GL_CCW);
-
-	shader.start();
-
-	TexturedModel* texModel = instance->getTexModel();
-	RawModel* model = texModel->getModel();
-	glBindVertexArray(model->getVaoID());
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texModel->getTexture()->getID());
-
-	glm::mat4 mvp = glm::mat4(1.0);
-	mvp = glm::translate(mvp, instance->getPos());
-	mvp = glm::translate(mvp, glm::vec3(0, 0, -5));
-	glm::vec3 rot = instance->getRot();
-	mvp = glm::scale(mvp, glm::vec3(instance->getScale()*0.5f));
-	mvp = glm::rotate(mvp, rot.x, glm::vec3(1, 0, 0));
-	mvp = glm::rotate(mvp, rot.y, glm::vec3(0, 1, 0));
-	mvp = glm::rotate(mvp, rot.z, glm::vec3(0, 0, 1));
-	mvp = glm::rotate(mvp, inc, glm::vec3(0, 1, 0));
-	inc += 0.01f;
-	shader.loadModelMatrix(mvp);
-	shader.loadProjectionMatrix(glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f));
-	shader.loadLight(Light(glm::vec3(-5, -1, 4), glm::vec3(1,1,1)));
-
-	prepareTexture(texModel->getTexture());
-	glDrawElements(GL_TRIANGLES, model->getVertexCount(), GL_UNSIGNED_INT, 0);
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
 	glBindVertexArray(0);
 	shader.stop();
 }
