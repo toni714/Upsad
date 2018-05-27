@@ -5,6 +5,7 @@ RawModel::RawModel(GLuint vaoID, int vertexCount)
 {
 }
 
+
 RawModel::~RawModel()
 {
 }
