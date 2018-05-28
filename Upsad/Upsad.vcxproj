@@ -146,6 +146,7 @@
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelHelper.cpp" />
+    <ClCompile Include="OBJWrapper.cpp" />
     <ClCompile Include="RawModel.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="StaticRenderer.cpp" />
@@ -156,10 +157,13 @@
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BMPData.h" />
     <ClInclude Include="FileUtil.h" />
     <ClInclude Include="ImageTexture.h" />
     <ClInclude Include="Instance.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="ModelData.h" />
+    <ClInclude Include="OBJWrapper.h" />
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="ModelHelper.h" />
     <ClInclude Include="ShaderProgram.h" />

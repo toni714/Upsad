@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 #include "RawModel.h"
@@ -10,11 +10,11 @@
 
 class StaticRenderer {
 private:
-	std::map<const RawModel*, std::vector<const Instance*>> queue;
+	std::unordered_map<const RawModel*, std::vector<const Instance*>> queue;
 	StaticShader shader;
 	float inc;
 public:
-	StaticRenderer();
+	StaticRenderer()noexcept;
 	void addInstance(const Instance* instance);
 	void clearQueue();
 	void prepare();

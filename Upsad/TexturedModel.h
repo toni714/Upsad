@@ -8,8 +8,9 @@ class TexturedModel
 private:
 	RawModel * model;
 	ImageTexture* texture;
-public:
 	TexturedModel(RawModel* model, ImageTexture* texture);
+public:
+	static TexturedModel* loadFromFiles(const char* modelFilename, const char* textureFilename);
 	~TexturedModel();
 	RawModel* getModel();
 	ImageTexture* getTexture();

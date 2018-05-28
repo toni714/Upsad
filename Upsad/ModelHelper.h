@@ -3,21 +3,30 @@
 #include <glad\glad.h>
 #include <vector>
 #include <iostream>
+#include <unordered_map>
 
 #include "RawModel.h"
+#include "ImageTexture.h"
+#include "ModelData.h"
+#include "BMPData.h"
 
 class ModelHelper {
 private:
-	std::vector<GLuint> vaos;
-	std::vector<GLuint> vbos;
-	std::vector<GLuint> textures;
-	std::vector<uint8_t*> textureData;
-	GLuint createVAO();
-	GLuint createVBO(const GLenum& target);
+	static std::unordered_map<std::string, RawModel*> models;
+	static std::vector<GLuint> vbos;
+	static std::unordered_map<std::string, ImageTexture*> textures;
+	static std::vector<uint8_t*> textureData;
+	static GLuint createVAO();
+	static GLuint createVBO(const GLenum& target);
+	static GLuint createTexture();
 	template<typename T>
-	void bufferData(std::vector<T> data, const int& attribute, const int& dimensions, const GLenum& type);
+	static void bufferData(std::vector<T> data, const int& attribute, const int& dimensions, const GLenum& type);
+	static void loadToVAO(const GLuint& vaoID, const ModelData& modelData);
+	static void loadTextureData(const GLuint& textureID, const BMPData& textureData);
 public:
-	RawModel * loadToVAO(const std::vector<GLfloat>& vertices, const std::vector<GLfloat>& uvs, const std::vector<GLfloat>& normals, const std::vector<GLuint>& indices);
-	GLuint loadTexture(GLuint width, GLuint height, uint8_t* data);
-	~ModelHelper();
+	ModelHelper() = delete;
+	~ModelHelper() = delete;
+	static RawModel* getModelFromFile(const char* filename);
+	static ImageTexture* getTextureFromFile(const char* filename);
+	static void cleanup();
 };

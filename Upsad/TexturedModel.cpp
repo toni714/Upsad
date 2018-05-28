@@ -5,6 +5,11 @@ TexturedModel::TexturedModel(RawModel* model, ImageTexture* texture)
 {
 }
 
+TexturedModel * TexturedModel::loadFromFiles(const char * modelFilename, const char * textureFilename)
+{
+	return new TexturedModel(RawModel::loadFromOBJ(modelFilename), ImageTexture::loadFromBMP(textureFilename));
+}
+
 TexturedModel::~TexturedModel()
 {
 }

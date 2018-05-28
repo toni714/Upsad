@@ -1,25 +1,16 @@
-#include <glad\glad.h>
-#include <GLFW\glfw3.h>
-#include <iostream>
-#include <vector>
-
-#include "Utility.h"
-#include "RawModel.h"
-#include "StaticRenderer.h"
-#include "Instance.h"
-#include "WindowManager.h"
-#include "ImageTexture.h"
-#include "TexturedModel.h"
-
-#include <chrono>//DEBUG
-#include <thread>//DEBUG
-
+#include <chrono>
+#include <thread>
 #include <glm\vec3.hpp>
+
+#include "WindowManager.h"
+#include "StaticRenderer.h"
+#include "TexturedModel.h"
+#include "Instance.h"
 
 WindowManager* windowManager;
 StaticRenderer* staticRenderer;
 
-RawModel* model;
+TexturedModel* texModel;
 Instance* instance;
 
 namespace UPSAD {
@@ -29,12 +20,13 @@ namespace UPSAD {
 }
 
 void cleanup() {
-	if (model != nullptr) {
-		delete model;
+	if (instance != nullptr) {
+		delete instance;
 	}
-	if (Utility::modelHelper != nullptr) {
-		delete Utility::modelHelper;
+	if (texModel != nullptr) {
+		delete texModel;
 	}
+	ModelHelper::cleanup();
 	if (windowManager != nullptr) {
 		delete windowManager;
 	}
@@ -42,16 +34,12 @@ void cleanup() {
 
 void setupUtility() {
 	windowManager = new WindowManager(UPSAD::WIDTH, UPSAD::HEIGHT, UPSAD::TITLE);
-	Utility::modelHelper = new ModelHelper();
 	staticRenderer = new StaticRenderer();
 }
 
 void loadModel() {
-	model = FileUtil::loadOBJ("tree.obj");
-	GLuint textureID = FileUtil::load_BMP("tree.bmp");
-	ImageTexture* texture = new ImageTexture(textureID);
-	TexturedModel* texModel = new TexturedModel(model, texture);
-	instance = new Instance(texModel, glm::vec3(0, -2, -10), glm::vec3(0, 0, 0), 1);
+	texModel = TexturedModel::loadFromFiles("tree.obj", "tree.bmp");
+	instance = Instance::createInstance(texModel, glm::vec3(0, -2, -10), glm::vec3(0, 0, 0), 1);
 }
 
 void handleEvents() {
@@ -59,10 +47,11 @@ void handleEvents() {
 }
 
 void update() {
-	staticRenderer->addInstance(instance);//Maybe move this to draw
+	//pass (for now)
 }
 
 void draw() {
+	staticRenderer->addInstance(instance);
 	staticRenderer->render();
 	staticRenderer->clearQueue();
 	windowManager->swapBuffers();
@@ -85,11 +74,10 @@ void gameloop() {
 	}
 }
 
-int main() {
+int main(int argc, char** argv) {
 	try {
 		setupUtility();
 		loadModel();
-		
 		gameloop();
 	}
 	catch (std::runtime_error e) {

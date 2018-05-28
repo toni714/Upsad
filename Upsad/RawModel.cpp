@@ -1,10 +1,20 @@
 #include "RawModel.h"
+#include "FileUtil.h"
 
-RawModel::RawModel(GLuint vaoID, int vertexCount)
+RawModel::RawModel(const GLuint& vaoID, const int& vertexCount)
 	:vaoID(vaoID), vertexCount(vertexCount)
 {
 }
 
+RawModel * RawModel::loadFromOBJ(const char * filename)
+{
+	return ModelHelper::getModelFromFile(filename);
+}
+
+RawModel * RawModel::createModel(const GLuint & vaoID, const int & vertexCount)
+{
+	return new RawModel(vaoID, vertexCount);
+}
 
 RawModel::~RawModel()
 {

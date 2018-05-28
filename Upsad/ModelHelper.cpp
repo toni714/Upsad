@@ -1,11 +1,59 @@
 #include "ModelHelper.h"
 
+#include "FileUtil.h"
+
+RawModel * ModelHelper::getModelFromFile(const char * filename)
+{
+	const auto& modelPosition = models.find(filename);
+	if (modelPosition != models.end()) {
+		return modelPosition->second;
+	}
+	else {
+		GLuint vaoID = createVAO();
+		ModelData modelData = FileUtil::getModelData(filename);
+
+		loadToVAO(vaoID, modelData);
+
+		RawModel* model = RawModel::createModel(vaoID, modelData.indices.size());
+		models.insert(std::make_pair(filename, model));
+
+		return model;
+	}
+}
+
+ImageTexture * ModelHelper::getTextureFromFile(const char * filename)
+{
+	const auto& texturePosition = textures.find(filename);
+	if (texturePosition != textures.end()) {
+		return texturePosition->second;
+	}
+	else {
+		GLuint textureID = createTexture();
+
+		loadTextureData(textureID, FileUtil::getBMPData(filename));
+
+		ImageTexture* texture = ImageTexture::createTexture(textureID);
+		textures.insert(std::make_pair(filename, texture));
+
+		return texture;
+	}
+}
+
+void ModelHelper::loadTextureData(const GLuint& textureID, const BMPData& textureData) {
+	GLint mode = GL_RGB;
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, mode, textureData.width, textureData.height, 0, mode, GL_UNSIGNED_BYTE, textureData.pixels);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 GLuint ModelHelper::createVAO()
 {
 	GLuint vaoID;
 	glGenVertexArrays(1, &vaoID);
-	glBindVertexArray(vaoID);
-	vaos.push_back(vaoID);
 	return vaoID;
 }
 
@@ -16,6 +64,13 @@ GLuint ModelHelper::createVBO(const GLenum& target)
 	glBindBuffer(target, vboID);
 	vbos.push_back(vboID);
 	return vboID;
+}
+
+GLuint ModelHelper::createTexture()
+{
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	return textureID;
 }
 
 template<typename T>
@@ -29,51 +84,47 @@ void ModelHelper::bufferData(std::vector<T> data, const int& attribute, const in
 	glDisableVertexAttribArray(attribute);
 }
 
-RawModel * ModelHelper::loadToVAO(const std::vector<GLfloat>& vertices, const std::vector<GLfloat>& uvs, const std::vector<GLfloat>& normals, const std::vector<GLuint>& indices) {
-	GLuint vaoID = createVAO();
-
-	bufferData(vertices, 0, 3, GL_FLOAT);
-	bufferData(uvs, 1, 2, GL_FLOAT);
-	bufferData(normals, 2, 3, GL_FLOAT);
+void ModelHelper::loadToVAO(const GLuint& vaoID, const ModelData& modelData) {
+	glBindVertexArray(vaoID);
+	bufferData(modelData.vertices, 0, 3, GL_FLOAT);
+	bufferData(modelData.uvs, 1, 2, GL_FLOAT);
+	bufferData(modelData.normals, 2, 3, GL_FLOAT);
 
 	createVBO(GL_ELEMENT_ARRAY_BUFFER);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, modelData.indices.size() * sizeof(GLuint), modelData.indices.data(), GL_STATIC_DRAW);
 
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);			//Is this good practice?
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);	//Is this good Practice?
 
 	glBindVertexArray(0);	//Unbind VAO (Safety)
-
-	return new RawModel(vaoID, indices.size());
 }
 
-GLuint ModelHelper::loadTexture(GLuint width, GLuint height, uint8_t * data)
+void ModelHelper::cleanup()
 {
-	GLuint textureID;
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	std::vector<GLuint> textureList;
+	for (const auto &textureID : textures) {
+		textureList.push_back(textureID.second->getID());
+		delete textureID.second;
+	}
+	glDeleteTextures((GLsizei)textureList.size(), textureList.data());
 
-	GLint mode = GL_RGB;
+	glDeleteBuffers((GLsizei)vbos.size(), vbos.data());
+	std::vector<GLuint> vaoList;
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, mode, width, height, 0, mode, GL_UNSIGNED_BYTE, data);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	textures.push_back(textureID);
-	textureData.push_back(data);
-	return textureID;
-}
-
-ModelHelper::~ModelHelper()
-{
-	glDeleteTextures(textures.size(), textures.data());
-
-	glDeleteBuffers(vbos.size(), vbos.data());
-	glDeleteVertexArrays(vaos.size(), vaos.data());
+	for (const auto &model : models) {
+		vaoList.push_back(model.second->getVaoID());
+		delete model.second;
+	}
+	glDeleteVertexArrays((GLsizei)vaoList.size(), vaoList.data());
+	models.clear();
 
 	//This crashes....
 	/*for (auto it = textureData.begin(); it != textureData.end(); it++) {
 		delete[] * it;
 	}*/
 }
+
+std::unordered_map<std::string, RawModel*> ModelHelper::models;
+std::vector<GLuint> ModelHelper::vbos;
+std::unordered_map<std::string, ImageTexture*> ModelHelper::textures;
+std::vector<uint8_t*> ModelHelper::textureData;

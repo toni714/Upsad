@@ -3,14 +3,14 @@
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-StaticRenderer::StaticRenderer()
+StaticRenderer::StaticRenderer() noexcept
 {
-	inc = 0;
+	inc = 0;//TODO remove this
 }
 
 void StaticRenderer::addInstance(const Instance * instance)
 {
-	std::map<const RawModel*, std::vector<const Instance*>>::iterator pos = queue.find(instance->getTexModel()->getModel());
+	std::unordered_map<const RawModel*, std::vector<const Instance*>>::iterator pos = queue.find(instance->getTexModel()->getModel());
 	if (pos != queue.end()) {
 		pos->second.push_back(instance);
 	}
@@ -68,11 +68,11 @@ void StaticRenderer::prepareTexture(const ImageTexture * texture)
 void StaticRenderer::render()
 {
 	prepare();
-	for (auto queueIT = queue.begin(); queueIT != queue.end(); queueIT++) {
-		const RawModel* model = queueIT->first;
+	for (const auto& queueIT : queue) {
+		const RawModel* model = queueIT.first;
 		prepareModel(model);
-		for (auto instanceIT = queueIT->second.begin(); instanceIT != queueIT->second.end(); instanceIT++) {
-			prepareInstance(*instanceIT);
+		for (const auto& instanceIT : queueIT.second) {
+			prepareInstance(instanceIT);
 
 			glDrawElements(GL_TRIANGLES, model->getVertexCount(), GL_UNSIGNED_INT, 0);
 		}

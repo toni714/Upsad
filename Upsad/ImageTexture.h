@@ -6,8 +6,11 @@ class ImageTexture
 {
 private:
 	GLuint id;
+	ImageTexture(const GLuint& textureID);
 public:
-	ImageTexture(GLuint textureID);
+	ImageTexture() = delete;
+	static ImageTexture* loadFromBMP(const char* filename);
+	static ImageTexture* createTexture(const GLuint& textureID);
 	~ImageTexture();
 	GLuint getID() const;
 };

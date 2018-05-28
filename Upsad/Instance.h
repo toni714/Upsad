@@ -12,8 +12,9 @@ private:
 	glm::vec3 pos;
 	glm::vec3 rot;
 	int scale;
-public:
 	Instance(TexturedModel* texModel, const glm::vec3& pos, const glm::vec3& rot, const int& scale);
+public:
+	static Instance* createInstance(TexturedModel* texModel, const glm::vec3& pos, const glm::vec3& rot, const int& scale);
 	~Instance();
 	TexturedModel* getTexModel() const;
 	glm::vec3 getPos() const;

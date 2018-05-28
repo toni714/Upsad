@@ -5,6 +5,11 @@ Instance::Instance(TexturedModel* texModel, const glm::vec3& pos, const glm::vec
 {
 }
 
+Instance * Instance::createInstance(TexturedModel * texModel, const glm::vec3 & pos, const glm::vec3 & rot, const int & scale)
+{
+	return new Instance(texModel, pos, rot, scale);
+}
+
 Instance::~Instance()
 {
 }
