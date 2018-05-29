@@ -1,5 +1,6 @@
 #include "ImageTexture.h"
 #include "FileUtil.h"
+#include "ModelHelper.h"
 
 ImageTexture::ImageTexture(const GLuint& textureID)
 	:id(textureID)

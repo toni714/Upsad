@@ -3,74 +3,59 @@
 std::string FileUtil::loadFile(const char * const filename)
 {
 	std::ifstream ifs(filename);
-	std::string content{ std::istreambuf_iterator<char>(ifs),std::istreambuf_iterator<char>() };
-	return content;
+	return std::string{ std::istreambuf_iterator<char>(ifs),std::istreambuf_iterator<char>() };
 }
 
 BMPData FileUtil::getBMPData(const char * const filename)
 {
-	uint8_t* datBuff[2] = { nullptr, nullptr }; // Header buffers
-
-	uint8_t* pixels = nullptr; // Pixels
-
-	BITMAPFILEHEADER* bmpHeader = nullptr; // Header
-	BITMAPINFOHEADER* bmpInfo = nullptr; // Info
-
-										 // The file... We open it with it's constructor
-	std::ifstream file(filename, std::ios::binary);
+std::ifstream file(filename, std::ios::binary);
 	if (!file)
 	{
 		throw std::runtime_error("Failure to open bitmap file.");
 	}
 
-	// Allocate byte memory that will hold the two headers
-	datBuff[0] = new uint8_t[sizeof(BITMAPFILEHEADER)];
-	datBuff[1] = new uint8_t[sizeof(BITMAPINFOHEADER)];
+	uint8_t* datBuff[2] = {
+		new uint8_t[sizeof(BITMAPFILEHEADER)],
+		new uint8_t[sizeof(BITMAPINFOHEADER)]
+	};
 
-	file.read((char*)datBuff[0], sizeof(BITMAPFILEHEADER));
-	file.read((char*)datBuff[1], sizeof(BITMAPINFOHEADER));
+	BITMAPFILEHEADER bmpHeader;
+	BITMAPINFOHEADER bmpInfo;
 
-	// Construct the values from the buffers
-	bmpHeader = (BITMAPFILEHEADER*)datBuff[0];
-	bmpInfo = (BITMAPINFOHEADER*)datBuff[1];
+	file.read((char*)&bmpHeader, sizeof(BITMAPFILEHEADER));
+	file.read((char*)&bmpInfo, sizeof(BITMAPINFOHEADER));
 
-	// Check if the file is an actual BMP file
-	if (bmpHeader->bfType != 0x4D42)
+	const WORD bmpCode = 0x4D42;
+	if (bmpHeader.bfType != bmpCode)
 	{
 		throw std::runtime_error("File \"" + std::string(filename) + "\" isn't a bitmap file\n");
 	}
 
-	// First allocate pixel memory
-	pixels = new uint8_t[bmpInfo->biSizeImage];
+	unsigned long imageSize = bmpInfo.biSizeImage;
+	GLuint width = bmpInfo.biWidth;
+	GLuint height = bmpInfo.biHeight;
 
-	// Go to where image data starts, then read in image data
-	file.seekg(bmpHeader->bfOffBits);
-	file.read((char*)pixels, bmpInfo->biSizeImage);
+	uint8_t* pixelData = new uint8_t[imageSize];
 
-	// We're almost done. We have our image loaded, however it's not in the right format.
-	// .bmp files store image data in the BGR format, and we have to convert it to RGB.
-	// Since we have the value in bytes, this shouldn't be to hard to accomplish
+	file.seekg(bmpHeader.bfOffBits);
+	file.read((char*)pixelData, imageSize);
+
 	uint8_t tmpRGB = 0; // Swap buffer
-	for (unsigned long i = 0; i < bmpInfo->biSizeImage; i += 3)
+	for (unsigned long i = 0; i < imageSize; i += 3)
 	{
-		tmpRGB = pixels[i];
-		pixels[i] = pixels[i + 2];
-		pixels[i + 2] = tmpRGB;
+		tmpRGB = pixelData[i];
+		pixelData[i] = pixelData[i + 2];
+		pixelData[i + 2] = tmpRGB;
 	}
 
-	// Set width and height to the values loaded from the file
-	GLuint w = bmpInfo->biWidth;
-	GLuint h = bmpInfo->biHeight;
-
-	// Delete the two buffers.
 	delete[] datBuff[0];
 	delete[] datBuff[1];
 	//delete[] pixels;
 
 	return BMPData{
-		w,
-		h,
-		pixels
+		width,
+		height,
+		pixelData
 	};
 }
 

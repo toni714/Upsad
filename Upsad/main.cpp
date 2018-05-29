@@ -6,6 +6,7 @@
 #include "StaticRenderer.h"
 #include "TexturedModel.h"
 #include "Instance.h"
+#include "ModelHelper.h"
 
 WindowManager* windowManager;
 StaticRenderer* staticRenderer;

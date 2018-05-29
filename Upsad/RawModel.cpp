@@ -1,5 +1,6 @@
 #include "RawModel.h"
 #include "FileUtil.h"
+#include "ModelHelper.h"
 
 RawModel::RawModel(const GLuint& vaoID, const int& vertexCount)
 	:vaoID(vaoID), vertexCount(vertexCount)
