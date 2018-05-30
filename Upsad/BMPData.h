@@ -6,5 +6,6 @@
 struct BMPData {
 	GLuint width;
 	GLuint height;
+	GLenum colorFormat;
 	uint8_t* pixels;
 };

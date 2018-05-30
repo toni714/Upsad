@@ -40,13 +40,12 @@ ImageTexture * ModelHelper::getTextureFromFile(const char * filename)
 }
 
 void ModelHelper::loadTextureData(const GLuint& textureID, const BMPData& textureData) {
-	GLint mode = GL_RGB;
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, mode, textureData.width, textureData.height, 0, mode, GL_UNSIGNED_BYTE, textureData.pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureData.width, textureData.height, 0, textureData.colorFormat, GL_UNSIGNED_BYTE, textureData.pixels);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 

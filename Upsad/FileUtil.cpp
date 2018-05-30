@@ -1,5 +1,27 @@
 #include "FileUtil.h"
 
+std::ifstream FileUtil::openFile(const char * filename)
+{
+	std::ifstream file = std::ifstream(filename, std::ios::in | std::ios::binary);
+	if (!file) {
+		throw std::runtime_error(std::string("File could not be opened: ")+filename);
+	}
+	return file;
+}
+
+uint8_t * FileUtil::readPixelDataFromBitmap(std::ifstream& file, const DWORD & dataOffset, const DWORD & imageSize)
+{
+	uint8_t* pixelData = new uint8_t[imageSize];
+	file.seekg(dataOffset);
+	file.read((char*)pixelData, imageSize);
+	return pixelData;
+}
+
+bool FileUtil::hasValidBitmapSignature(std::ifstream & file)
+{
+	return readValueFromFile<WORD>(file, offsetof(BITMAPFILEHEADER, bfType))==BITMAP_SIGNATURE;
+}
+
 std::string FileUtil::loadFile(const char * const filename)
 {
 	std::ifstream ifs(filename);
@@ -8,53 +30,37 @@ std::string FileUtil::loadFile(const char * const filename)
 
 BMPData FileUtil::getBMPData(const char * const filename)
 {
-std::ifstream file(filename, std::ios::binary);
-	if (!file)
-	{
-		throw std::runtime_error("Failure to open bitmap file.");
+	std::ifstream file = openFile(filename);
+
+	if (!hasValidBitmapSignature(file)) {
+		throw std::runtime_error(std::string("Given File is not in BMP-Format: ") + filename);
 	}
 
-	uint8_t* datBuff[2] = {
-		new uint8_t[sizeof(BITMAPFILEHEADER)],
-		new uint8_t[sizeof(BITMAPINFOHEADER)]
-	};
+	//These are in order of appearance in the bitmap header (maybe this is faster?)
+	auto pixelDataOffset=readValueFromFile<DWORD>(file, offsetof(BITMAPFILEHEADER, bfOffBits));
+	auto width=readValueFromFile<LONG>(file, sizeof(BITMAPFILEHEADER) + offsetof(BITMAPINFOHEADER, biWidth));
+	auto height=readValueFromFile<LONG>(file, sizeof(BITMAPFILEHEADER) + offsetof(BITMAPINFOHEADER, biHeight));
+	auto imageSize=readValueFromFile<DWORD>(file, sizeof(BITMAPFILEHEADER) + offsetof(BITMAPINFOHEADER, biSizeImage));
 
-	BITMAPFILEHEADER bmpHeader;
-	BITMAPINFOHEADER bmpInfo;
-
-	file.read((char*)&bmpHeader, sizeof(BITMAPFILEHEADER));
-	file.read((char*)&bmpInfo, sizeof(BITMAPINFOHEADER));
-
-	const WORD bmpCode = 0x4D42;
-	if (bmpHeader.bfType != bmpCode)
-	{
-		throw std::runtime_error("File \"" + std::string(filename) + "\" isn't a bitmap file\n");
+	uint8_t* pixelData=readPixelDataFromBitmap(file, pixelDataOffset, imageSize);
+	
+	if (COLOR_LOADING_FORMAT == GL_RGB) {
+		//TODO extraxct this into a Function (swap R and B values)
+		uint8_t swapBuffer = 0;
+		for (unsigned long curentPixel = 0; curentPixel < imageSize; curentPixel += 3)
+		{
+			swapBuffer = pixelData[curentPixel];
+			pixelData[curentPixel] = pixelData[curentPixel + 2];
+			pixelData[curentPixel + 2] = swapBuffer;
+		}
 	}
 
-	unsigned long imageSize = bmpInfo.biSizeImage;
-	GLuint width = bmpInfo.biWidth;
-	GLuint height = bmpInfo.biHeight;
-
-	uint8_t* pixelData = new uint8_t[imageSize];
-
-	file.seekg(bmpHeader.bfOffBits);
-	file.read((char*)pixelData, imageSize);
-
-	uint8_t tmpRGB = 0; // Swap buffer
-	for (unsigned long i = 0; i < imageSize; i += 3)
-	{
-		tmpRGB = pixelData[i];
-		pixelData[i] = pixelData[i + 2];
-		pixelData[i + 2] = tmpRGB;
-	}
-
-	delete[] datBuff[0];
-	delete[] datBuff[1];
-	//delete[] pixels;
+	//TODO delete[] pixelData;
 
 	return BMPData{
-		width,
-		height,
+		(GLuint)width,
+		(GLuint)height,
+		COLOR_LOADING_FORMAT,
 		pixelData
 	};
 }
