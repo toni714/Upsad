@@ -14,6 +14,7 @@ RawModel * ModelHelper::getModelFromFile(const char * filename)
 
 		loadToVAO(vaoID, modelData);
 
+		//TODO maybe make vertex count an size_t
 		RawModel* model = RawModel::createModel(vaoID, modelData.indices.size());
 		models.insert(std::make_pair(filename, model));
 
@@ -75,7 +76,8 @@ GLuint ModelHelper::createTexture()
 template<typename T>
 void ModelHelper::bufferData(std::vector<T> data, const int& attribute, const int& dimensions, const GLenum& type)
 {
-	createVBO(GL_ARRAY_BUFFER);
+	GLuint bufferID=createVBO(GL_ARRAY_BUFFER);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(T), data.data(), GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(attribute);

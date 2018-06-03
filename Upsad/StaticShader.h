@@ -3,9 +3,12 @@
 #include <glad/glad.h>
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm\gtx\string_cast.hpp>
 
 #include "ShaderProgram.h"
 #include "Light.h"
+#include "Camera.h"
 
 class StaticShader :public ShaderProgram
 {
@@ -26,4 +29,5 @@ public:
 	void loadModelMatrix(const glm::mat4& mat);
 	void loadProjectionMatrix(const glm::mat4& mat);
 	void loadLight(const Light& light);
+	void loadCamera(const Camera& camera);
 };

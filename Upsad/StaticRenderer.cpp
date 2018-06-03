@@ -8,6 +8,25 @@ StaticRenderer::StaticRenderer() noexcept
 	inc = 0;//TODO remove this
 }
 
+void StaticRenderer::loadProjectionMatrix(const float& fov, const float& screenRatio, const float& nearPlane, const float& farPlane)
+{
+	shader.start();
+	shader.loadProjectionMatrix(glm::perspective(fov, screenRatio, nearPlane, farPlane));
+	shader.stop();
+}
+
+void StaticRenderer::loadLight(const Light & light)
+{
+	shader.start();
+	shader.loadLight(light);
+	shader.stop();
+}
+
+void StaticRenderer::loadCamera(const Camera& camera)
+{
+	shader.loadCamera(camera);
+}
+
 void StaticRenderer::addInstance(const Instance * instance)
 {
 	std::unordered_map<const RawModel*, std::vector<const Instance*>>::iterator pos = queue.find(instance->getTexModel()->getModel());
@@ -16,6 +35,7 @@ void StaticRenderer::addInstance(const Instance * instance)
 	}
 	else {
 		queue.insert(std::pair<const RawModel*, std::vector<const Instance*>>(instance->getTexModel()->getModel(), std::vector<const Instance*>{instance}));
+		
 	}
 }
 
@@ -31,8 +51,6 @@ void StaticRenderer::prepare() {
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CCW);
 	shader.start();
-	shader.loadProjectionMatrix(glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f));//only do this once
-	shader.loadLight(Light(glm::vec3(-5, -1, 4), glm::vec3(1, 1, 1)));//only do this on updata
 }
 
 void StaticRenderer::prepareModel(const RawModel * model)
@@ -54,7 +72,7 @@ void StaticRenderer::prepareInstance(const Instance * instance)
 	modelMatrix = glm::rotate(modelMatrix, rot.x, glm::vec3(1, 0, 0));
 	modelMatrix = glm::rotate(modelMatrix, rot.y + inc, glm::vec3(0, 1, 0));
 	modelMatrix = glm::rotate(modelMatrix, rot.z, glm::vec3(0, 0, 1));
-	inc += 0.01f;
+	//inc += 0.01f;
 	shader.loadModelMatrix(modelMatrix);
 	prepareTexture(instance->getTexModel()->getTexture());
 }
@@ -73,14 +91,12 @@ void StaticRenderer::render()
 		prepareModel(model);
 		for (const auto& instanceIT : queueIT.second) {
 			prepareInstance(instanceIT);
-
 			glDrawElements(GL_TRIANGLES, model->getVertexCount(), GL_UNSIGNED_INT, 0);
 		}
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(2);
 	}
-
 	glBindVertexArray(0);
 	shader.stop();
 }

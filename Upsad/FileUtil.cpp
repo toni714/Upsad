@@ -70,7 +70,6 @@ ModelData FileUtil::getModelData(const char * filename)
 	OBJWrapper ow = OBJWrapper(filename);
 
 	auto m_vertices = ow.getVertices();
-	auto m_indices = ow.getIndices();
 
 	std::vector<float> u_vertices = std::vector<float>();
 	std::vector<float> u_uvs = std::vector<float>();
@@ -90,6 +89,6 @@ ModelData FileUtil::getModelData(const char * filename)
 		u_vertices,
 		u_uvs,
 		u_normals,
-		m_indices
+		ow.getIndices()
 	};
 }

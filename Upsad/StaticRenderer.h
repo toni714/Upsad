@@ -7,6 +7,7 @@
 #include "Instance.h"
 #include "StaticShader.h"
 #include "Light.h"
+#include "Camera.h"
 
 class StaticRenderer {
 private:
@@ -15,6 +16,9 @@ private:
 	float inc;
 public:
 	StaticRenderer()noexcept;
+	void loadProjectionMatrix(const float& fov, const float& screenRatio, const float& nearPlane, const float& farPlane);
+	void loadLight(const Light& light);
+	void loadCamera(const Camera& camera);
 	void addInstance(const Instance* instance);
 	void clearQueue();
 	void prepare();

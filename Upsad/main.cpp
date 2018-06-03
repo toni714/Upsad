@@ -7,12 +7,16 @@
 #include "TexturedModel.h"
 #include "Instance.h"
 #include "ModelHelper.h"
+#include "Camera.h"
+#include "Keys.h"
 
-WindowManager* windowManager;
 StaticRenderer* staticRenderer;
 
 TexturedModel* texModel;
 Instance* instance;
+std::vector<Instance*> instances;
+Camera* camera;
+float inc = 0;
 
 namespace UPSAD {
 	const int WIDTH = 800;
@@ -28,34 +32,68 @@ void cleanup() {
 		delete texModel;
 	}
 	ModelHelper::cleanup();
-	if (windowManager != nullptr) {
-		delete windowManager;
-	}
+	WindowManager::cleanup();
 }
 
 void setupUtility() {
-	windowManager = new WindowManager(UPSAD::WIDTH, UPSAD::HEIGHT, UPSAD::TITLE);
+	WindowManager::createWindow(UPSAD::WIDTH, UPSAD::HEIGHT, UPSAD::TITLE);
+
 	staticRenderer = new StaticRenderer();
+	staticRenderer->loadProjectionMatrix(glm::pi<float>()/4.0f, UPSAD::WIDTH/(float)UPSAD::HEIGHT, 0.1f, 100.0f);
+	staticRenderer->loadLight(Light(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
+	
+	camera = new Camera(glm::vec3(0,0,0), glm::vec3(0,0,0));
+	staticRenderer->loadCamera(*camera);
 }
 
 void loadModel() {
-	texModel = TexturedModel::loadFromFiles("tree.obj", "tree.bmp");
+	texModel = TexturedModel::loadFromFiles("tree.obj", "tree2.bmp");
 	instance = Instance::createInstance(texModel, glm::vec3(0, -2, -10), glm::vec3(0, 0, 0), 1);
+	for (int i = 0; i < 100; i++) {
+		float x = ((rand() / (float)RAND_MAX) - 0.5) * 100;
+		float z = ((rand() / (float)RAND_MAX) - 0.5) * 100;
+		instances.push_back(Instance::createInstance(texModel, glm::vec3(x,-2,z), glm::vec3(0,0,0), 1));
+	}
 }
 
 void handleEvents() {
-	windowManager->pollEvents();
+	WindowManager::pollEvents();
+}
+
+void moveCamera() {
+	if (Keys::FORWARD.isPressed()) {
+		camera->moveForward(0.1f);
+	}
+	if (Keys::BACKWARD.isPressed()) {
+		camera->moveForward(-0.1f);
+	}
+	if (Keys::LEFT.isPressed()) {
+		camera->moveSideways(-0.1f);
+	}
+	if (Keys::RIGHT.isPressed()) {
+		camera->moveSideways(0.1f);
+	}
+	if (Keys::TURN_LEFT.isPressed()) {
+		camera->rotateBy(glm::vec3(0, glm::radians(1.f), 0));
+	}
+	if (Keys::TURN_RIGHT.isPressed()) {
+		camera->rotateBy(glm::vec3(0, glm::radians(-1.f), 0));
+	}
+	staticRenderer->loadCamera(*camera);
 }
 
 void update() {
-	//pass (for now)
+	moveCamera();
 }
 
 void draw() {
 	staticRenderer->addInstance(instance);
+	for (const auto& _instance : instances) {
+		staticRenderer->addInstance(_instance);
+	}
 	staticRenderer->render();
 	staticRenderer->clearQueue();
-	windowManager->swapBuffers();
+	WindowManager::swapBuffers();
 }
 
 void sleep() {
@@ -63,7 +101,7 @@ void sleep() {
 }
 
 bool appIsRunning() {
-	return !windowManager->shouldClose();
+	return !WindowManager::shouldClose();
 }
 
 void gameloop() {

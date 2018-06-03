@@ -10,7 +10,7 @@ void WindowManager::setWindowHints(const int& versionMajor, const int& versionMi
 	glfwWindowHint(GLFW_RESIZABLE, resizeable);
 }
 
-WindowManager::WindowManager(const int & width, const int & height, const char * title)
+void WindowManager::createWindow(const int & width, const int & height, const char * title)
 {
 	if (!glfwInit()) {
 		throw std::runtime_error("Error! Failed to initialize the Windowing Library!");
@@ -36,22 +36,31 @@ WindowManager::WindowManager(const int & width, const int & height, const char *
 	glViewport(0, 0, screenWidth, screenHeight);
 }
 
-WindowManager::~WindowManager()
+void WindowManager::cleanup()
 {
+	glfwDestroyWindow(window);
+	window = nullptr;
 	glfwTerminate();
 }
 
-bool WindowManager::shouldClose() const
+GLFWwindow * WindowManager::getWindowReference()
+{
+	return window;
+}
+
+bool WindowManager::shouldClose()
 {
 	return glfwWindowShouldClose(window);
 }
 
-void WindowManager::pollEvents() const
+void WindowManager::pollEvents()
 {
 	glfwPollEvents();
 }
 
-void WindowManager::swapBuffers() const
+void WindowManager::swapBuffers()
 {
 	glfwSwapBuffers(window);
 }
+
+GLFWwindow* WindowManager::window = nullptr;
