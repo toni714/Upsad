@@ -1,23 +1,11 @@
 #pragma once
 
 #include <glm\vec3.hpp>
-#include <glm/gtx/rotate_vector.hpp>
-
 #include "TexturedModel.h"
+#include "Object3DScaled.h"
 
-class Instance
+struct Instance :public Object3DScaled
 {
-private:
-	TexturedModel * texModel;
-	glm::vec3 pos;
-	glm::vec3 rot;
-	int scale;
-	Instance(TexturedModel* texModel, const glm::vec3& pos, const glm::vec3& rot, const int& scale);
-public:
-	static Instance* createInstance(TexturedModel* texModel, const glm::vec3& pos, const glm::vec3& rot, const int& scale);
-	~Instance();
-	TexturedModel* getTexModel() const;
-	glm::vec3 getPos() const;
-	glm::vec3 getRot() const;
-	int getScale() const;
+	Instance(TexturedModel* texturedModel, const glm::vec3& position, const glm::vec3& rotation, float scale) :Object3DScaled(position, rotation, scale), texturedModel(texturedModel) {}
+	TexturedModel* texturedModel;//TODO make shared pointer
 };

@@ -15,7 +15,7 @@ RawModel * ModelHelper::getModelFromFile(const char * filename)
 		loadToVAO(vaoID, modelData);
 
 		//TODO maybe make vertex count an size_t
-		RawModel* model = RawModel::createModel(vaoID, modelData.indices.size());
+		RawModel* model = new RawModel(vaoID, modelData.indices.size());
 		models.insert(std::make_pair(filename, model));
 
 		return model;
@@ -33,7 +33,7 @@ ImageTexture * ModelHelper::getTextureFromFile(const char * filename)
 
 		loadTextureData(textureID, FileUtil::getBMPData(filename));
 
-		ImageTexture* texture = ImageTexture::createTexture(textureID);
+		ImageTexture* texture = new ImageTexture(textureID);
 		textures.insert(std::make_pair(filename, texture));
 
 		return texture;
@@ -104,7 +104,7 @@ void ModelHelper::cleanup()
 {
 	std::vector<GLuint> textureList;
 	for (const auto &textureID : textures) {
-		textureList.push_back(textureID.second->getID());
+		textureList.push_back(textureID.second->id);
 		delete textureID.second;
 	}
 	glDeleteTextures((GLsizei)textureList.size(), textureList.data());
@@ -113,7 +113,7 @@ void ModelHelper::cleanup()
 	std::vector<GLuint> vaoList;
 
 	for (const auto &model : models) {
-		vaoList.push_back(model.second->getVaoID());
+		vaoList.push_back(model.second->vaoID);
 		delete model.second;
 	}
 	glDeleteVertexArrays((GLsizei)vaoList.size(), vaoList.data());

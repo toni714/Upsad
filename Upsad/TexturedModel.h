@@ -3,15 +3,9 @@
 #include "RawModel.h"
 #include "ImageTexture.h"
 
-class TexturedModel
+struct TexturedModel
 {
-private:
+	TexturedModel(RawModel* model, ImageTexture* texture) :model(model), texture(texture) {}
 	RawModel * model;
 	ImageTexture* texture;
-	TexturedModel(RawModel* model, ImageTexture* texture);
-public:
-	static TexturedModel* loadFromFiles(const char* modelFilename, const char* textureFilename);
-	~TexturedModel();
-	RawModel* getModel();
-	ImageTexture* getTexture();
 };

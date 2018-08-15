@@ -29,12 +29,12 @@ void StaticRenderer::loadCamera(const Camera& camera)
 
 void StaticRenderer::addInstance(const Instance * instance)
 {
-	std::unordered_map<const RawModel*, std::vector<const Instance*>>::iterator pos = queue.find(instance->getTexModel()->getModel());
+	std::unordered_map<const RawModel*, std::vector<const Instance*>>::iterator pos = queue.find(instance->texturedModel->model);
 	if (pos != queue.end()) {
 		pos->second.push_back(instance);
 	}
 	else {
-		queue.insert(std::pair<const RawModel*, std::vector<const Instance*>>(instance->getTexModel()->getModel(), std::vector<const Instance*>{instance}));
+		queue.insert(std::pair<const RawModel*, std::vector<const Instance*>>(instance->texturedModel->model, std::vector<const Instance*>{instance}));
 		
 	}
 }
@@ -55,7 +55,7 @@ void StaticRenderer::prepare() {
 
 void StaticRenderer::prepareModel(const RawModel * model)
 {
-	glBindVertexArray(model->getVaoID());
+	glBindVertexArray(model->vaoID);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
@@ -64,23 +64,23 @@ void StaticRenderer::prepareModel(const RawModel * model)
 void StaticRenderer::prepareInstance(const Instance * instance)
 {
 	glm::mat4 modelMatrix = glm::mat4(1.0);
-	modelMatrix = glm::translate(modelMatrix, instance->getPos());
+	modelMatrix = glm::translate(modelMatrix, instance->position);
 
-	modelMatrix = glm::scale(modelMatrix, glm::vec3(instance->getScale()*0.5f));
+	modelMatrix = glm::scale(modelMatrix, glm::vec3(instance->scale*0.5f));
 
-	glm::vec3 rot = instance->getRot();
+	glm::vec3 rot = instance->rotation;
 	modelMatrix = glm::rotate(modelMatrix, rot.x, glm::vec3(1, 0, 0));
 	modelMatrix = glm::rotate(modelMatrix, rot.y + inc, glm::vec3(0, 1, 0));
 	modelMatrix = glm::rotate(modelMatrix, rot.z, glm::vec3(0, 0, 1));
 	//inc += 0.01f;
 	shader.loadModelMatrix(modelMatrix);
-	prepareTexture(instance->getTexModel()->getTexture());
+	prepareTexture(instance->texturedModel->texture);
 }
 
 void StaticRenderer::prepareTexture(const ImageTexture * texture)
 {
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture->getID());
+	glBindTexture(GL_TEXTURE_2D, texture->id);
 }
 
 void StaticRenderer::render()
@@ -91,7 +91,7 @@ void StaticRenderer::render()
 		prepareModel(model);
 		for (const auto& instanceIT : queueIT.second) {
 			prepareInstance(instanceIT);
-			glDrawElements(GL_TRIANGLES, model->getVertexCount(), GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, model->vertexCount, GL_UNSIGNED_INT, 0);
 		}
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);

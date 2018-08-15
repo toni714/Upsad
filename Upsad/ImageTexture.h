@@ -2,15 +2,9 @@
 
 #include <glad/glad.h>
 
-class ImageTexture
+struct ImageTexture
 {
-private:
-	GLuint id;
-	ImageTexture(const GLuint& textureID);
-public:
-	ImageTexture() = delete;
-	static ImageTexture* loadFromBMP(const char* filename);
-	static ImageTexture* createTexture(const GLuint& textureID);
+	ImageTexture(const GLuint id) :id(id) {}
+	const GLuint id;
 	~ImageTexture();
-	GLuint getID() const;
 };

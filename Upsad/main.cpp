@@ -47,12 +47,12 @@ void setupUtility() {
 }
 
 void loadModel() {
-	texModel = TexturedModel::loadFromFiles("tree.obj", "tree2.bmp");
-	instance = Instance::createInstance(texModel, glm::vec3(0, -2, -10), glm::vec3(0, 0, 0), 1);
+	texModel = new TexturedModel(ModelHelper::getModelFromFile("tree.obj"), ModelHelper::getTextureFromFile("tree.bmp"));
+	instance = new Instance(texModel, glm::vec3(0, -2, -10), glm::vec3(0, 0, 0), 1);
 	for (int i = 0; i < 100; i++) {
 		float x = ((rand() / (float)RAND_MAX) - 0.5) * 100;
 		float z = ((rand() / (float)RAND_MAX) - 0.5) * 100;
-		instances.push_back(Instance::createInstance(texModel, glm::vec3(x,-2,z), glm::vec3(0,0,0), 1));
+		instances.push_back(new Instance(texModel, glm::vec3(x,-2,z), glm::vec3(0,0,0), 1));
 	}
 }
 
@@ -74,10 +74,10 @@ void moveCamera() {
 		camera->moveSideways(0.1f);
 	}
 	if (Keys::TURN_LEFT.isPressed()) {
-		camera->rotateBy(glm::vec3(0, glm::radians(1.f), 0));
+		camera->rotation += glm::vec3(0, glm::radians(1.f), 0);
 	}
 	if (Keys::TURN_RIGHT.isPressed()) {
-		camera->rotateBy(glm::vec3(0, glm::radians(-1.f), 0));
+		camera->rotation += glm::vec3(0, glm::radians(-1.f), 0);
 	}
 	staticRenderer->loadCamera(*camera);
 }
