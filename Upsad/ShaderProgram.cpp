@@ -1,5 +1,9 @@
 #include "ShaderProgram.h"
 
+#include "FileUtil.h"
+#include <glm/gtc/type_ptr.hpp>
+#include <iostream>
+
 ShaderProgram::ShaderProgram(const std::string& vertexFile, const std::string& fragmentFile)
 {
 	vertexID = loadShader(FileUtil::loadFile(vertexFile.c_str()).c_str(), GL_VERTEX_SHADER);

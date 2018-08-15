@@ -1,11 +1,8 @@
 #pragma once
 
 #include <glad/glad.h>
+#include <string>
 #include <glm/mat4x4.hpp>
-#include <glm/gtc/type_ptr.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm\gtx\string_cast.hpp>
-
 #include "ShaderProgram.h"
 #include "Light.h"
 #include "Camera.h"
@@ -24,7 +21,6 @@ private:
 	void bindAttributes();
 public:
 	StaticShader();
-	~StaticShader();
 	virtual void getAllUniformLocations();
 	void loadModelMatrix(const glm::mat4& mat);
 	void loadProjectionMatrix(const glm::mat4& mat);

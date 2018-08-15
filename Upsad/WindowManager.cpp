@@ -1,5 +1,7 @@
 #include "WindowManager.h"
 
+#include <stdexcept>
+
 void WindowManager::setWindowHints(const int& versionMajor, const int& versionMinor, const int& openGLProfile, const int& resizeable)
 {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, versionMajor);

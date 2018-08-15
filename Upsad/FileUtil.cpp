@@ -1,5 +1,29 @@
 #include "FileUtil.h"
 
+#include "OBJWrapper.h"
+
+RawModel * FileUtil::getModelFromFile(const char * filename)
+{
+	const auto& modelPosition = models.find(filename);
+	if (modelPosition != models.end()) {
+		return modelPosition->second;
+	}
+	else {
+		GLuint vaoID = createVAO();
+		ModelData modelData = FileUtil::getModelData(filename);
+
+		loadToVAO(vaoID, modelData);
+
+		//TODO maybe make vertex count an size_t
+		RawModel* model = new RawModel(vaoID, modelData.indices.size());
+		models.insert(std::make_pair(filename, model));
+
+		return model;
+	}
+}
+
+
+
 std::ifstream FileUtil::openFile(const char * filename)
 {
 	std::ifstream file = std::ifstream(filename, std::ios::in | std::ios::binary);
@@ -92,3 +116,112 @@ ModelData FileUtil::getModelData(const char * filename)
 		ow.getIndices()
 	};
 }
+
+
+
+
+
+
+
+ImageTexture * FileUtil::getTextureFromFile(const char * filename)
+{
+	const auto& texturePosition = textures.find(filename);
+	if (texturePosition != textures.end()) {
+		return texturePosition->second;
+	}
+	else {
+		GLuint textureID = createTexture();
+
+		loadTextureData(textureID, FileUtil::getBMPData(filename));
+
+		ImageTexture* texture = new ImageTexture(textureID);
+		textures.insert(std::make_pair(filename, texture));
+
+		return texture;
+	}
+}
+
+void FileUtil::loadTextureData(const GLuint& textureID, const BMPData& textureData) {
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureData.width, textureData.height, 0, textureData.colorFormat, GL_UNSIGNED_BYTE, textureData.pixels);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+GLuint FileUtil::createVAO()
+{
+	GLuint vaoID;
+	glGenVertexArrays(1, &vaoID);
+	return vaoID;
+}
+
+GLuint FileUtil::createVBO(const GLenum& target)
+{
+	GLuint vboID;
+	glGenBuffers(1, &vboID);
+	glBindBuffer(target, vboID);
+	vbos.push_back(vboID);
+	return vboID;
+}
+
+GLuint FileUtil::createTexture()
+{
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	return textureID;
+}
+
+template<typename T>
+void FileUtil::bufferData(std::vector<T> data, const int& attribute, const int& dimensions, const GLenum& type)
+{
+	GLuint bufferID = createVBO(GL_ARRAY_BUFFER);
+	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
+	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(T), data.data(), GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(attribute);
+	glVertexAttribPointer(attribute, dimensions, type, GL_FALSE, 0, nullptr);
+	glDisableVertexAttribArray(attribute);
+}
+
+void FileUtil::loadToVAO(const GLuint& vaoID, const ModelData& modelData) {
+	glBindVertexArray(vaoID);
+	bufferData(modelData.vertices, 0, 3, GL_FLOAT);
+	bufferData(modelData.uvs, 1, 2, GL_FLOAT);
+	bufferData(modelData.normals, 2, 3, GL_FLOAT);
+
+	createVBO(GL_ELEMENT_ARRAY_BUFFER);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, modelData.indices.size() * sizeof(GLuint), modelData.indices.data(), GL_STATIC_DRAW);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);			//Is this good practice?
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);	//Is this good Practice?
+
+	glBindVertexArray(0);	//Unbind VAO (Safety)
+}
+
+void FileUtil::cleanup()
+{
+	for (const auto &textureID : textures) {
+		delete textureID.second;
+	}
+	textures.clear();
+
+	glDeleteBuffers((GLsizei)vbos.size(), vbos.data());
+
+	for (const auto &model : models) {
+		delete model.second;
+	}
+	models.clear();
+
+	//This crashes....
+	/*for (auto it = textureData.begin(); it != textureData.end(); it++) {
+	delete[] * it;
+	}*/
+}
+
+std::unordered_map<std::string, RawModel*> FileUtil::models;
+std::vector<GLuint> FileUtil::vbos;
+std::unordered_map<std::string, ImageTexture*> FileUtil::textures;
+std::vector<uint8_t*> FileUtil::textureData;

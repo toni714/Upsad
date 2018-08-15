@@ -24,9 +24,6 @@
     <ClCompile Include="RawModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ModelHelper.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="StaticRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -58,14 +55,11 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Keys.cpp">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RawModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StaticRenderer.h">
@@ -123,6 +117,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Object3DScaled.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ActiveObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

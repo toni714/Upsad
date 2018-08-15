@@ -1,14 +1,10 @@
-#include <chrono>
-#include <thread>
-#include <glm\vec3.hpp>
-
-#include "WindowManager.h"
 #include "StaticRenderer.h"
-#include "TexturedModel.h"
-#include "Instance.h"
-#include "ModelHelper.h"
-#include "Camera.h"
-#include "Keys.h"
+#include "FileUtil.h"
+#include "WindowManager.h"
+
+#include <glm/gtc/constants.hpp>
+#include <thread>
+#include <iostream>
 
 StaticRenderer* staticRenderer;
 
@@ -31,7 +27,7 @@ void cleanup() {
 	if (texModel != nullptr) {
 		delete texModel;
 	}
-	ModelHelper::cleanup();
+	FileUtil::cleanup();
 	WindowManager::cleanup();
 }
 
@@ -47,7 +43,7 @@ void setupUtility() {
 }
 
 void loadModel() {
-	texModel = new TexturedModel(ModelHelper::getModelFromFile("tree.obj"), ModelHelper::getTextureFromFile("tree.bmp"));
+	texModel = new TexturedModel(FileUtil::getModelFromFile("tree.obj"), FileUtil::getTextureFromFile("tree.bmp"));
 	instance = new Instance(texModel, glm::vec3(0, -2, -10), glm::vec3(0, 0, 0), 1);
 	for (int i = 0; i < 100; i++) {
 		float x = ((rand() / (float)RAND_MAX) - 0.5) * 100;
@@ -61,24 +57,7 @@ void handleEvents() {
 }
 
 void moveCamera() {
-	if (Keys::FORWARD.isPressed()) {
-		camera->moveForward(0.1f);
-	}
-	if (Keys::BACKWARD.isPressed()) {
-		camera->moveForward(-0.1f);
-	}
-	if (Keys::LEFT.isPressed()) {
-		camera->moveSideways(-0.1f);
-	}
-	if (Keys::RIGHT.isPressed()) {
-		camera->moveSideways(0.1f);
-	}
-	if (Keys::TURN_LEFT.isPressed()) {
-		camera->rotation += glm::vec3(0, glm::radians(1.f), 0);
-	}
-	if (Keys::TURN_RIGHT.isPressed()) {
-		camera->rotation += glm::vec3(0, glm::radians(-1.f), 0);
-	}
+	camera->update();
 	staticRenderer->loadCamera(*camera);
 }
 

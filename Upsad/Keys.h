@@ -1,7 +1,5 @@
 #pragma once
 
-#include "WindowManager.h"
-
 class Keys {
 private:
 	const int KEY_ID;

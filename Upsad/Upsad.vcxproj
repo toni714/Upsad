@@ -149,7 +149,6 @@
     <ClCompile Include="ImageTexture.cpp" />
     <ClCompile Include="Keys.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ModelHelper.cpp" />
     <ClCompile Include="OBJWrapper.cpp" />
     <ClCompile Include="RawModel.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
@@ -160,6 +159,7 @@
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActiveObject.h" />
     <ClInclude Include="Object3D.h" />
     <ClInclude Include="BMPData.h" />
     <ClInclude Include="Camera.h" />
@@ -172,7 +172,6 @@
     <ClInclude Include="Object3DScaled.h" />
     <ClInclude Include="OBJWrapper.h" />
     <ClInclude Include="RawModel.h" />
-    <ClInclude Include="ModelHelper.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="StaticRenderer.h" />
     <ClInclude Include="StaticShader.h" />

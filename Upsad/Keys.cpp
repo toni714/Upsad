@@ -1,5 +1,7 @@
 #include "Keys.h"
 
+#include "WindowManager.h"
+
 Keys::Keys(const int& keyID) 
 	:KEY_ID(keyID)
 {
@@ -7,7 +9,7 @@ Keys::Keys(const int& keyID)
 
 bool Keys::isPressed() const
 {
-	return glfwGetKey(WindowManager::getWindowReference(), KEY_ID);
+	return glfwGetKey(WindowManager::getWindowReference(), KEY_ID);//TODO THIS IS WRONG HERE
 }
 
 const Keys Keys::FORWARD(GLFW_KEY_W);

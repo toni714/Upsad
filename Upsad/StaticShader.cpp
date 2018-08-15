@@ -1,5 +1,7 @@
 #include "StaticShader.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 void StaticShader::bindAttributes()
 {
 	bindAttribute(0, "pos");
@@ -11,10 +13,6 @@ StaticShader::StaticShader()
 	:ShaderProgram("shader.vert", "shader.frag")
 {
 	getAllUniformLocations();
-}
-
-StaticShader::~StaticShader()
-{
 }
 
 void StaticShader::getAllUniformLocations()
