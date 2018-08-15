@@ -4,6 +4,7 @@
 
 #include <glm/gtc/constants.hpp>
 #include <thread>
+#include <chrono>
 #include <iostream>
 
 StaticRenderer* staticRenderer;
@@ -93,6 +94,7 @@ void gameloop() {
 }
 
 int main(int argc, char** argv) {
+	__debugbreak();
 	try {
 		setupUtility();
 		loadModel();
@@ -106,5 +108,7 @@ int main(int argc, char** argv) {
 	}
 
 	cleanup();
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	__debugbreak();
 	return EXIT_SUCCESS;
 }

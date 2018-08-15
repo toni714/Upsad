@@ -27,14 +27,14 @@ void StaticRenderer::loadCamera(const Camera& camera)
 	shader.loadCamera(camera);
 }
 
-void StaticRenderer::addInstance(const Instance * instance)
+void StaticRenderer::addInstance(const Instance* instance)
 {
-	std::unordered_map<const RawModel*, std::vector<const Instance*>>::iterator pos = queue.find(instance->texturedModel->model);
+	std::unordered_map<std::shared_ptr<RawModel>, std::vector<const Instance*>>::iterator pos = queue.find(instance->texturedModel->model);
 	if (pos != queue.end()) {
 		pos->second.push_back(instance);
 	}
 	else {
-		queue.insert(std::pair<const RawModel*, std::vector<const Instance*>>(instance->texturedModel->model, std::vector<const Instance*>{instance}));
+		queue.insert(std::pair<std::shared_ptr<RawModel>, std::vector<const Instance*>>(instance->texturedModel->model, std::vector<const Instance*>{instance}));
 		
 	}
 }
@@ -53,7 +53,7 @@ void StaticRenderer::prepare() {
 	shader.start();
 }
 
-void StaticRenderer::prepareModel(const RawModel * model)
+void StaticRenderer::prepareModel(std::shared_ptr<RawModel> model)
 {
 	glBindVertexArray(model->vaoID);
 	glEnableVertexAttribArray(0);
@@ -61,7 +61,7 @@ void StaticRenderer::prepareModel(const RawModel * model)
 	glEnableVertexAttribArray(2);
 }
 
-void StaticRenderer::prepareInstance(const Instance * instance)
+void StaticRenderer::prepareInstance(const Instance* instance)
 {
 	glm::mat4 modelMatrix = glm::mat4(1.0);
 	modelMatrix = glm::translate(modelMatrix, instance->position);
@@ -77,7 +77,7 @@ void StaticRenderer::prepareInstance(const Instance * instance)
 	prepareTexture(instance->texturedModel->texture);
 }
 
-void StaticRenderer::prepareTexture(const ImageTexture * texture)
+void StaticRenderer::prepareTexture(std::shared_ptr<ImageTexture> texture)
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture->id);
@@ -87,7 +87,7 @@ void StaticRenderer::render()
 {
 	prepare();
 	for (const auto& queueIT : queue) {
-		const RawModel* model = queueIT.first;
+		std::shared_ptr<RawModel> model = queueIT.first;
 		prepareModel(model);
 		for (const auto& instanceIT : queueIT.second) {
 			prepareInstance(instanceIT);

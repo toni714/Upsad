@@ -11,7 +11,7 @@
 
 class StaticRenderer {
 private:
-	std::unordered_map<const RawModel*, std::vector<const Instance*>> queue;
+	std::unordered_map<std::shared_ptr<RawModel>, std::vector<const Instance*>> queue;
 	StaticShader shader;
 	float inc;
 public:
@@ -22,8 +22,8 @@ public:
 	void addInstance(const Instance* instance);
 	void clearQueue();
 	void prepare();
-	void prepareModel(const RawModel* model);
+	void prepareModel(std::shared_ptr<RawModel> model);
 	void prepareInstance(const Instance* instance);
-	void prepareTexture(const ImageTexture* texture);
+	void prepareTexture(std::shared_ptr<ImageTexture> texture);
 	void render();
 };

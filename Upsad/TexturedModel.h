@@ -2,10 +2,11 @@
 
 #include "RawModel.h"
 #include "ImageTexture.h"
+#include <memory>
 
 struct TexturedModel
 {
-	TexturedModel(RawModel* model, ImageTexture* texture) :model(model), texture(texture) {}
-	RawModel * model;
-	ImageTexture* texture;
+	TexturedModel(std::shared_ptr<RawModel> model, std::shared_ptr<ImageTexture> texture) :model(model), texture(texture) {}
+	std::shared_ptr<RawModel> model;
+	std::shared_ptr<ImageTexture> texture;
 };

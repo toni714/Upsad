@@ -6,8 +6,8 @@
 
 ShaderProgram::ShaderProgram(const std::string& vertexFile, const std::string& fragmentFile)
 {
-	vertexID = loadShader(FileUtil::loadFile(vertexFile.c_str()).c_str(), GL_VERTEX_SHADER);
-	fragmentID = loadShader(FileUtil::loadFile(fragmentFile.c_str()).c_str(), GL_FRAGMENT_SHADER);
+	vertexID = loadShader(FileUtil::loadFileToString(vertexFile.c_str()).c_str(), GL_VERTEX_SHADER);
+	fragmentID = loadShader(FileUtil::loadFileToString(fragmentFile.c_str()).c_str(), GL_FRAGMENT_SHADER);
 	linkProgram();
 	getAllUniformLocations();
 }
