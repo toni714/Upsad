@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "ModelData.h"
+#include "Vertex.h"
 #include "BMPData.h"
 #include "RawModel.h"
 #include "ImageTexture.h"
@@ -35,8 +36,8 @@ private:
 public:
 	static std::string loadFileToString(const char* const filename);
 	static BMPData getBMPData(const char* const filename);
-	static ModelData getModelData(const char* filename);
 
+	static ModelData getModelData(const char * filename);
 
 	static std::shared_ptr<RawModel> getModelFromFile(const char* filename);
 	static std::shared_ptr<ImageTexture> getTextureFromFile(const char* filename);

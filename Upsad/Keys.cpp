@@ -2,7 +2,7 @@
 
 #include "WindowManager.h"
 
-Keys::Keys(const int& keyID) 
+Keys::Keys(const int& keyID)
 	:KEY_ID(keyID)
 {
 }

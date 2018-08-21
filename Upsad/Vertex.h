@@ -1,32 +1,17 @@
 #pragma once
 
 #include <glm/vec3.hpp>
-#include <glm/gtx/hash.hpp>
-#include <vector>
+#include <glm/vec2.hpp>
 
-class Vertex {
-public:
-	glm::vec3 pos;
+struct Vertex {
+	glm::vec3 position;
+	glm::vec2 uv_coordinates;
 	glm::vec3 normal;
-	glm::vec2 uvCoord;
-
-	Vertex(glm::vec3 pos, glm::vec3 normal, glm::vec2 uvCoord)
-		:pos(pos), normal(normal), uvCoord(uvCoord)
-	{}
-
-	bool operator==(const Vertex &other) const {
-		return pos == other.pos&&uvCoord == other.uvCoord&&normal == other.normal;
+	Vertex(const glm::vec3& position, const glm::vec2& uv_coordinates, const glm::vec3& normal)
+		:position(position), uv_coordinates(uv_coordinates), normal(normal)
+	{
+	}
+	bool operator==(const Vertex& other) const {
+		return other.position == position && other.uv_coordinates == uv_coordinates && other.normal == normal;
 	}
 };
-
-namespace std {
-	template<> struct hash<Vertex> {
-		size_t operator()(Vertex const &vert) const {
-			size_t h1 = hash<glm::vec3>()(vert.pos);
-			size_t h2 = hash<glm::vec2>()(vert.uvCoord);
-			size_t h3 = hash<glm::vec3>()(vert.normal);
-
-			return ((h1 ^ (h2 << 1)) >> 1) ^ h3;
-		}
-	};
-}

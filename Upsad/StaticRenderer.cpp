@@ -34,8 +34,7 @@ void StaticRenderer::addInstance(const Instance* instance)
 		pos->second.push_back(instance);
 	}
 	else {
-		queue.insert(std::pair<std::shared_ptr<RawModel>, std::vector<const Instance*>>(instance->texturedModel->model, std::vector<const Instance*>{instance}));
-		
+		queue.insert(std::pair<std::shared_ptr<RawModel>, std::vector<const Instance*>>(instance->texturedModel->model, std::vector<const Instance*>{ instance }));
 	}
 }
 

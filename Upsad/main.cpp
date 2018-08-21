@@ -36,10 +36,10 @@ void setupUtility() {
 	WindowManager::createWindow(UPSAD::WIDTH, UPSAD::HEIGHT, UPSAD::TITLE);
 
 	staticRenderer = new StaticRenderer();
-	staticRenderer->loadProjectionMatrix(glm::pi<float>()/4.0f, UPSAD::WIDTH/(float)UPSAD::HEIGHT, 0.1f, 100.0f);
+	staticRenderer->loadProjectionMatrix(glm::pi<float>() / 4.0f, UPSAD::WIDTH / (float)UPSAD::HEIGHT, 0.1f, 100.0f);
 	staticRenderer->loadLight(Light(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1)));
-	
-	camera = new Camera(glm::vec3(0,0,0), glm::vec3(0,0,0));
+
+	camera = new Camera(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0));
 	staticRenderer->loadCamera(*camera);
 }
 
@@ -47,9 +47,9 @@ void loadModel() {
 	texModel = new TexturedModel(FileUtil::getModelFromFile("tree.obj"), FileUtil::getTextureFromFile("tree.bmp"));
 	instance = new Instance(texModel, glm::vec3(0, -2, -10), glm::vec3(0, 0, 0), 1);
 	for (int i = 0; i < 100; i++) {
-		float x = ((rand() / (float)RAND_MAX) - 0.5) * 100;
-		float z = ((rand() / (float)RAND_MAX) - 0.5) * 100;
-		instances.push_back(new Instance(texModel, glm::vec3(x,-2,z), glm::vec3(0,0,0), 1));
+		float x = ((rand() / (float)RAND_MAX) - 0.5f) * 100;
+		float z = ((rand() / (float)RAND_MAX) - 0.5f) * 100;
+		instances.push_back(new Instance(texModel, glm::vec3(x, -2, z), glm::vec3(0, 0, 0), 1));
 	}
 }
 
@@ -94,7 +94,7 @@ void gameloop() {
 }
 
 int main(int argc, char** argv) {
-	__debugbreak();
+	//__debugbreak();
 	try {
 		setupUtility();
 		loadModel();
@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
 	}
 
 	cleanup();
-	std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	__debugbreak();
+	//std::this_thread::sleep_for(std::chrono::milliseconds(500));
+	//__debugbreak();
 	return EXIT_SUCCESS;
 }

@@ -2,10 +2,11 @@
 
 #include <glad/glad.h>
 #include <vector>
+#include "Vertex.h"
 
 struct ModelData {
-	const std::vector<GLfloat> vertices;
-	const std::vector<GLfloat> uvs;
-	const std::vector<GLfloat> normals;
-	const std::vector<GLuint> indices;
+	std::vector<Vertex> vertices;
+	std::vector<GLuint> indices;
+	ModelData(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices)
+		:vertices(vertices), indices(indices) {}
 };

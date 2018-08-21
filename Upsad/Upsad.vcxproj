@@ -71,19 +71,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\tinyobjloader;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1\include;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glad\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1\include;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glad\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1_build\src\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\tinyobjloader;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1\include;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glad\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1\include;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glad\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1_build\src\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\tinyobjloader;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glm_single;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1\include;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glad\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\glm_single;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1\include;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glad\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1_build\src\Debug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\tinyobjloader;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glm_single;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1\include;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glad\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\glm_single;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1\include;C:\Users\Toni\Documents\Visual Studio 2017\Libs\glad\include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Users\Toni\Documents\Visual Studio 2017\Libs\glfw-3.2.1_build\src\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -149,13 +149,11 @@
     <ClCompile Include="ImageTexture.cpp" />
     <ClCompile Include="Keys.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="OBJWrapper.cpp" />
     <ClCompile Include="RawModel.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="StaticRenderer.cpp" />
     <ClCompile Include="StaticShader.cpp" />
     <ClCompile Include="StringUtil.cpp" />
-    <ClCompile Include="Utility.cpp" />
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -170,14 +168,12 @@
     <ClInclude Include="Light.h" />
     <ClInclude Include="ModelData.h" />
     <ClInclude Include="Object3DScaled.h" />
-    <ClInclude Include="OBJWrapper.h" />
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="StaticRenderer.h" />
     <ClInclude Include="StaticShader.h" />
     <ClInclude Include="StringUtil.h" />
     <ClInclude Include="TexturedModel.h" />
-    <ClInclude Include="Utility.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>
