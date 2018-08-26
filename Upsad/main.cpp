@@ -1,6 +1,7 @@
 #include "StaticRenderer.h"
-#include "FileUtil.h"
+#include "FileHelper.h"
 #include "WindowManager.h"
+#include "ModelHelper.h"
 
 #include <glm/gtc/constants.hpp>
 #include <thread>
@@ -28,7 +29,7 @@ void cleanup() {
 	if (texModel != nullptr) {
 		delete texModel;
 	}
-	FileUtil::cleanup();
+	FileHelper::cleanup();
 	WindowManager::cleanup();
 }
 
@@ -44,7 +45,7 @@ void setupUtility() {
 }
 
 void loadModel() {
-	texModel = new TexturedModel(FileUtil::getModelFromFile("tree.obj"), FileUtil::getTextureFromFile("tree.bmp"));
+	texModel = new TexturedModel(ModelHelper::getModelFromFile("tree.obj"), FileHelper::getTextureFromFile("tree.bmp"));
 	instance = new Instance(texModel, glm::vec3(0, -2, -10), glm::vec3(0, 0, 0), 1);
 	for (int i = 0; i < 100; i++) {
 		float x = ((rand() / (float)RAND_MAX) - 0.5f) * 100;

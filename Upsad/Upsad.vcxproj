@@ -144,30 +144,35 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="FileUtil.cpp" />
+    <ClCompile Include="FileHelper.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="ImageTexture.cpp" />
     <ClCompile Include="Keys.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ModelHelper.cpp" />
+    <ClCompile Include="OpenGLHelper.cpp" />
     <ClCompile Include="RawModel.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="StaticRenderer.cpp" />
     <ClCompile Include="StaticShader.cpp" />
     <ClCompile Include="StringUtil.cpp" />
+    <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActiveObject.h" />
+    <ClInclude Include="ModelHelper.h" />
     <ClInclude Include="Object3D.h" />
     <ClInclude Include="BMPData.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="FileUtil.h" />
+    <ClInclude Include="FileHelper.h" />
     <ClInclude Include="ImageTexture.h" />
     <ClInclude Include="Instance.h" />
     <ClInclude Include="Keys.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="ModelData.h" />
     <ClInclude Include="Object3DScaled.h" />
+    <ClInclude Include="OpenGLHelper.h" />
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="StaticRenderer.h" />

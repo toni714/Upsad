@@ -1,13 +1,13 @@
 #include "ShaderProgram.h"
 
-#include "FileUtil.h"
+#include "FileHelper.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 ShaderProgram::ShaderProgram(const std::string& vertexFile, const std::string& fragmentFile)
 {
-	vertexID = loadShader(FileUtil::loadFileToString(vertexFile.c_str()).c_str(), GL_VERTEX_SHADER);
-	fragmentID = loadShader(FileUtil::loadFileToString(fragmentFile.c_str()).c_str(), GL_FRAGMENT_SHADER);
+	vertexID = loadShader(FileHelper::loadFileToString(vertexFile.c_str()).c_str(), GL_VERTEX_SHADER);
+	fragmentID = loadShader(FileHelper::loadFileToString(fragmentFile.c_str()).c_str(), GL_FRAGMENT_SHADER);
 	linkProgram();
 	getAllUniformLocations();
 }

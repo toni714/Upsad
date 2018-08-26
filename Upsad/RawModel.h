@@ -3,8 +3,13 @@
 #include <glad\glad.h>
 struct RawModel
 {
-	RawModel(const GLuint vaoID, const int vertexCount) :vaoID(vaoID), vertexCount(vertexCount) {}
+	RawModel(GLuint vaoID, int vertexCount, GLuint positionBufferID, GLuint uvBufferID, GLuint normalBufferID)
+		:vaoID(vaoID), vertexCount(vertexCount), positionBufferID(positionBufferID), uvBufferID(uvBufferID), normalBufferID(normalBufferID){}
 	const GLuint vaoID;
 	const int vertexCount;
+	const GLuint positionBufferID;
+	const GLuint uvBufferID;
+	const GLuint normalBufferID;
+
 	~RawModel();
 };

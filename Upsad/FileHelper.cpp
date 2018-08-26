@@ -1,10 +1,12 @@
-#include "FileUtil.h"
+#include "FileHelper.h"
 
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
 #include "StringUtil.h"
+#include "OpenGLHelper.h"
+#include "ModelHelper.h"
 
-ModelData FileUtil::getModelData(const char* filename) {
+ModelData FileHelper::getModelDataFromFile(const std::string& filename) {
 	std::vector<GLuint> vertexIndices, uvIndices, normalIndices;
 	std::vector<glm::vec3> temp_vertices;
 	std::vector<glm::vec2> temp_uvs;
@@ -12,7 +14,7 @@ ModelData FileUtil::getModelData(const char* filename) {
 
 	std::vector<std::vector<std::vector<GLuint>>> temp_faces;
 
-	std::string fileContent = FileUtil::loadFileToString(filename);
+	std::string fileContent = FileHelper::loadFileToString(filename);
 	std::vector<std::string> lines = StringUtil::splitString(fileContent.c_str(), "\n");
 
 	for (const auto& line : lines) {
@@ -64,84 +66,7 @@ ModelData FileUtil::getModelData(const char* filename) {
 	return ModelData(vertices, indices);
 }
 
-std::shared_ptr<RawModel> FileUtil::getModelFromFile(const char* filename)
-{
-	const auto& modelPosition = models.find(filename);
-	if (modelPosition != models.end()) {
-		return modelPosition->second;
-	}
-	else {
-		GLuint vaoID = createVAO();
-		ModelData modelData = getModelData(filename);
-
-		loadModelToVAO(vaoID, modelData);
-
-		//TODO maybe make vertex count an size_t
-		std::shared_ptr<RawModel> model = std::make_shared<RawModel>(vaoID, modelData.indices.size());
-		models.insert(std::make_pair(filename, model));
-
-		return model;
-	}
-}
-
-GLuint FileUtil::createVAO()
-{
-	GLuint vaoID;
-	glGenVertexArrays(1, &vaoID);
-	return vaoID;
-}
-
-void FileUtil::loadModelToVAO(const GLuint& vaoID, const ModelData& modelData) {
-	std::vector<GLfloat> positions;
-	std::vector<GLfloat> uv_coordinates;
-	std::vector<GLfloat> normals;
-	for (const auto& vertex : modelData.vertices) {
-		positions.push_back(vertex.position.x);
-		positions.push_back(vertex.position.y);
-		positions.push_back(vertex.position.z);
-		uv_coordinates.push_back(vertex.uv_coordinates.x);
-		uv_coordinates.push_back(vertex.uv_coordinates.y);
-		normals.push_back(vertex.normal.x);
-		normals.push_back(vertex.normal.y);
-		normals.push_back(vertex.normal.z);
-	}
-	//__debugbreak();
-	glBindVertexArray(vaoID);
-	bufferData(positions, 0, 3, GL_FLOAT);
-	bufferData(uv_coordinates, 1, 2, GL_FLOAT);
-	bufferData(normals, 2, 3, GL_FLOAT);
-
-	GLuint vboID = createVBO(GL_ELEMENT_ARRAY_BUFFER);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, modelData.indices.size() * sizeof(GLuint), modelData.indices.data(), GL_STATIC_DRAW);
-
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);			//Is this good practice?
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);	//Is this good Practice?
-
-	glBindVertexArray(0);	//Unbind VAO (Safety)
-}
-
-template<typename T>
-void FileUtil::bufferData(std::vector<T> data, const int& attribute, const int& dimensions, const GLenum& type)
-{
-	GLuint bufferID = createVBO(GL_ARRAY_BUFFER);
-	glBindBuffer(GL_ARRAY_BUFFER, bufferID);
-	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(T), data.data(), GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(attribute);
-	glVertexAttribPointer(attribute, dimensions, type, GL_FALSE, 0, nullptr);
-	glDisableVertexAttribArray(attribute);
-}
-
-GLuint FileUtil::createVBO(const GLenum& target)
-{
-	GLuint vboID;
-	glGenBuffers(1, &vboID);
-	vbos.push_back(vboID);
-	return vboID;
-}
-
-std::shared_ptr<ImageTexture> FileUtil::getTextureFromFile(const char * filename)
+std::shared_ptr<ImageTexture> FileHelper::getTextureFromFile(const char * filename)
 {
 	const auto& texturePosition = textures.find(filename);
 	if (texturePosition != textures.end()) {
@@ -159,14 +84,14 @@ std::shared_ptr<ImageTexture> FileUtil::getTextureFromFile(const char * filename
 	}
 }
 
-GLuint FileUtil::createTexture()
+GLuint FileHelper::createTexture()
 {
 	GLuint textureID;
 	glGenTextures(1, &textureID);
 	return textureID;
 }
 
-BMPData FileUtil::getBMPData(const char * const filename)
+BMPData FileHelper::getBMPData(const char * const filename)
 {
 	std::ifstream file = openFile(filename);
 
@@ -203,12 +128,12 @@ BMPData FileUtil::getBMPData(const char * const filename)
 	};
 }
 
-bool FileUtil::hasValidBitmapSignature(std::ifstream & file)
+bool FileHelper::hasValidBitmapSignature(std::ifstream & file)
 {
 	return readValueFromFile<WORD>(file, offsetof(BITMAPFILEHEADER, bfType)) == BITMAP_SIGNATURE;
 }
 
-uint8_t * FileUtil::readPixelDataFromBitmap(std::ifstream& file, const DWORD & dataOffset, const DWORD & imageSize)
+uint8_t * FileHelper::readPixelDataFromBitmap(std::ifstream& file, const DWORD & dataOffset, const DWORD & imageSize)
 {
 	uint8_t* pixelData = new uint8_t[imageSize];
 	file.seekg(dataOffset);
@@ -216,7 +141,7 @@ uint8_t * FileUtil::readPixelDataFromBitmap(std::ifstream& file, const DWORD & d
 	return pixelData;
 }
 
-void FileUtil::loadTextureData(const GLuint& textureID, const BMPData& textureData) {
+void FileHelper::loadTextureData(GLuint textureID, const BMPData& textureData) {
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -226,7 +151,7 @@ void FileUtil::loadTextureData(const GLuint& textureID, const BMPData& textureDa
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-std::ifstream FileUtil::openFile(const char * filename)
+std::ifstream FileHelper::openFile(const char * filename)
 {
 	std::ifstream file = std::ifstream(filename, std::ios::in | std::ios::binary);
 	if (!file) {
@@ -235,19 +160,15 @@ std::ifstream FileUtil::openFile(const char * filename)
 	return file;
 }
 
-std::string FileUtil::loadFileToString(const char * const filename)
+std::string FileHelper::loadFileToString(const std::string& filename)
 {
 	std::ifstream ifs(filename);
 	return std::string{ std::istreambuf_iterator<char>(ifs),std::istreambuf_iterator<char>() };
 }
 
-void FileUtil::cleanup()
+void FileHelper::cleanup()
 {
 	textures.clear();
-
-	glDeleteBuffers((GLsizei)vbos.size(), vbos.data());
-
-	models.clear();
 
 	//This crashes....
 	/*for (auto it = textureData.begin(); it != textureData.end(); it++) {
@@ -255,7 +176,5 @@ void FileUtil::cleanup()
 	}*/
 }
 
-std::unordered_map<std::string, std::shared_ptr<RawModel>> FileUtil::models;
-std::vector<GLuint> FileUtil::vbos;
-std::unordered_map<std::string, std::shared_ptr<ImageTexture>> FileUtil::textures;
-std::vector<uint8_t*> FileUtil::textureData;
+std::unordered_map<std::string, std::shared_ptr<ImageTexture>> FileHelper::textures;
+std::vector<uint8_t*> FileHelper::textureData;
