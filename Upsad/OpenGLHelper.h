@@ -6,6 +6,7 @@
 namespace OpenGLHelper {
 	GLuint createVAO();
 	GLuint createVBO(GLenum target);
+	GLuint createTexture();
 	template<typename T>
 	void bufferData(GLuint vaoID, GLuint bufferID, std::vector<T> data, int attribute, int dimensions, GLenum type)
 	{

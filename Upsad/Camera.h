@@ -5,7 +5,8 @@
 
 struct Camera : public Object3D, public ActiveObject {
 	Camera(const glm::vec3& position, const glm::vec3& rotation) :Object3D(position, rotation) {}
-	void moveForward(const float& amount);
-	void moveSideways(const float& amount);
+	glm::vec3 calculateForward(float amount);
+	glm::vec3 calculateSideways(float amount);
+	glm::vec3 getNextPosition();
 	void update();
 };

@@ -1,6 +1,6 @@
-#include "StringUtil.h"
+#include "StringHelper.h"
 
-std::vector<std::string> StringUtil::splitString(std::string input, const char * delimiter) {
+std::vector<std::string> StringHelper::splitString(std::string input, const char * delimiter) {
 	size_t position = input.find(delimiter);
 	while (input.compare(0, strlen(delimiter), delimiter) == 0) {
 		input = input.substr(strlen(delimiter));

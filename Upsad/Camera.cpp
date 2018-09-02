@@ -3,30 +3,30 @@
 #include <glm/trigonometric.hpp>
 #include "Keys.h"
 
-void Camera::moveForward(const float & amount)
+glm::vec3 Camera::calculateForward(float amount)
 {
-	position.x += amount * sin(-rotation.y);
-	position.z += amount * (-cos(rotation.y));
+	return glm::vec3(amount * sin(-rotation.y), position.y, amount * (-cos(rotation.y)));
 }
 
-void Camera::moveSideways(const float & amount)
+glm::vec3 Camera::calculateSideways(float amount)
 {
-	position.x += amount * cos(rotation.y);
-	position.z += amount * (-sin(rotation.y));
+	return glm::vec3(amount * cos(rotation.y), position.y, amount * (-sin(rotation.y)));;
 }
 
-void Camera::update() {
+glm::vec3 Camera::getNextPosition() {
+	//TODO return  projected next position
+	glm::vec3 moveBy=glm::vec3(0,0,0);
 	if (Keys::FORWARD.isPressed()) {
-		moveForward(0.1f);
+		moveBy += calculateForward(0.1f);
 	}
 	if (Keys::BACKWARD.isPressed()) {
-		moveForward(-0.1f);
+		moveBy += calculateForward(-0.1f);
 	}
 	if (Keys::LEFT.isPressed()) {
-		moveSideways(-0.1f);
+		moveBy += calculateSideways(-0.1f);
 	}
 	if (Keys::RIGHT.isPressed()) {
-		moveSideways(0.1f);
+		moveBy += calculateSideways(0.1f);
 	}
 	if (Keys::TURN_LEFT.isPressed()) {
 		rotation += glm::vec3(0, glm::radians(1.f), 0);
@@ -34,4 +34,9 @@ void Camera::update() {
 	if (Keys::TURN_RIGHT.isPressed()) {
 		rotation += glm::vec3(0, glm::radians(-1.f), 0);
 	}
+	return (position + moveBy);
+}
+
+void Camera::update()
+{
 }

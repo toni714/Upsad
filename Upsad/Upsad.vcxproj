@@ -147,20 +147,25 @@
     <ClCompile Include="FileHelper.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="ImageTexture.cpp" />
+    <ClCompile Include="Instance.cpp" />
     <ClCompile Include="Keys.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="ModelHelper.cpp" />
     <ClCompile Include="OpenGLHelper.cpp" />
     <ClCompile Include="RawModel.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="StaticRenderer.cpp" />
     <ClCompile Include="StaticShader.cpp" />
-    <ClCompile Include="StringUtil.cpp" />
+    <ClCompile Include="StringHelper.cpp" />
+    <ClCompile Include="TextureHelper.cpp" />
     <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActiveObject.h" />
+    <ClInclude Include="LimitBox.h" />
+    <ClInclude Include="MathHelper.h" />
     <ClInclude Include="ModelHelper.h" />
     <ClInclude Include="Object3D.h" />
     <ClInclude Include="BMPData.h" />
@@ -177,8 +182,10 @@
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="StaticRenderer.h" />
     <ClInclude Include="StaticShader.h" />
-    <ClInclude Include="StringUtil.h" />
+    <ClInclude Include="StringHelper.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="TexturedModel.h" />
+    <ClInclude Include="TextureHelper.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="WindowManager.h" />
   </ItemGroup>

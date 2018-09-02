@@ -11,3 +11,10 @@ GLuint OpenGLHelper::createVBO(GLenum target) {
 	glGenBuffers(1, &vboID);
 	return vboID;
 }
+
+GLuint OpenGLHelper::createTexture()
+{
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	return textureID;
+}

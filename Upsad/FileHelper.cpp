@@ -2,11 +2,13 @@
 
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
-#include "StringUtil.h"
+#include "StringHelper.h"
 #include "OpenGLHelper.h"
 #include "ModelHelper.h"
+#include "LimitBox.h"
 
 ModelData FileHelper::getModelDataFromFile(const std::string& filename) {
+	LimitBox bounding=LimitBox(0, 0, 0, 0, 0, 0);
 	std::vector<GLuint> vertexIndices, uvIndices, normalIndices;
 	std::vector<glm::vec3> temp_vertices;
 	std::vector<glm::vec2> temp_uvs;
@@ -15,12 +17,34 @@ ModelData FileHelper::getModelDataFromFile(const std::string& filename) {
 	std::vector<std::vector<std::vector<GLuint>>> temp_faces;
 
 	std::string fileContent = FileHelper::loadFileToString(filename);
-	std::vector<std::string> lines = StringUtil::splitString(fileContent.c_str(), "\n");
+	std::vector<std::string> lines = StringHelper::splitString(fileContent.c_str(), "\n");
 
 	for (const auto& line : lines) {
-		std::vector<std::string> pieces = StringUtil::splitString(line, " ");
+		std::vector<std::string> pieces = StringHelper::splitString(line, " ");
 		if (pieces[0] == "v") {
-			temp_vertices.push_back(glm::vec3(std::stod(pieces[1]), std::stod(pieces[2]), std::stod(pieces[3])));
+			double x = std::stod(pieces[1]);
+			double y = std::stod(pieces[2]);
+			double z = std::stod(pieces[3]);
+			temp_vertices.push_back(glm::vec3(x, y, z));
+
+			if (x < bounding.left) {
+				bounding.left = x;
+			}
+			if (x > bounding.right) {
+				bounding.right = x;
+			}
+			if (y < bounding.bottom) {
+				bounding.bottom = y;
+			}
+			if (y > bounding.top) {
+				bounding.top = y;
+			}
+			if (z < bounding.front) {
+				bounding.front = z;
+			}
+			if (z > bounding.back) {
+				bounding.back = z;
+			}
 		}
 		else if (pieces[0] == "vt") {
 			temp_uvs.push_back(glm::vec2(std::stod(pieces[1]), std::stod(pieces[2])));
@@ -29,10 +53,10 @@ ModelData FileHelper::getModelDataFromFile(const std::string& filename) {
 			temp_normals.push_back(glm::vec3(std::stod(pieces[1]), std::stod(pieces[2]), std::stod(pieces[3])));
 		}
 		else if (pieces[0] == "f") {
-			std::vector<std::string> v1_raw = StringUtil::splitString(pieces[1], "/");
+			std::vector<std::string> v1_raw = StringHelper::splitString(pieces[1], "/");
 			std::vector<GLuint> v1 = std::vector<GLuint>();
-			std::vector<std::string> v2_raw = StringUtil::splitString(pieces[2], "/");
-			std::vector<std::string> v3_raw = StringUtil::splitString(pieces[3], "/");
+			std::vector<std::string> v2_raw = StringHelper::splitString(pieces[2], "/");
+			std::vector<std::string> v3_raw = StringHelper::splitString(pieces[3], "/");
 			std::vector<std::vector<GLuint>> triangle = {
 				{ static_cast<GLuint>(std::stoi(v1_raw[0]) - 1), static_cast<GLuint>(std::stoi(v1_raw[1]) - 1), static_cast<GLuint>(std::stoi(v1_raw[2]) - 1) },
 				{ static_cast<GLuint>(std::stoi(v2_raw[0]) - 1), static_cast<GLuint>(std::stoi(v2_raw[1]) - 1) , static_cast<GLuint>(std::stoi(v2_raw[2]) - 1) },
@@ -63,37 +87,14 @@ ModelData FileHelper::getModelDataFromFile(const std::string& filename) {
 			}
 		}
 	}
-	return ModelData(vertices, indices);
+	__debugbreak();
+	return ModelData(vertices, indices, bounding);
 }
 
-std::shared_ptr<ImageTexture> FileHelper::getTextureFromFile(const char * filename)
+BMPData FileHelper::getBMPDataFromFile(const std::string& filename)
 {
-	const auto& texturePosition = textures.find(filename);
-	if (texturePosition != textures.end()) {
-		return texturePosition->second;
-	}
-	else {
-		GLuint textureID = createTexture();
-
-		loadTextureData(textureID, getBMPData(filename));
-
-		std::shared_ptr<ImageTexture> texture = std::make_shared<ImageTexture>(textureID);
-		textures.insert(std::make_pair(filename, texture));
-
-		return texture;
-	}
-}
-
-GLuint FileHelper::createTexture()
-{
-	GLuint textureID;
-	glGenTextures(1, &textureID);
-	return textureID;
-}
-
-BMPData FileHelper::getBMPData(const char * const filename)
-{
-	std::ifstream file = openFile(filename);
+	using namespace INTERNAL;
+	std::ifstream file = INTERNAL::openFile(filename);
 
 	if (!hasValidBitmapSignature(file)) {
 		throw std::runtime_error(std::string("Given File is not in BMP-Format: ") + filename);
@@ -128,12 +129,12 @@ BMPData FileHelper::getBMPData(const char * const filename)
 	};
 }
 
-bool FileHelper::hasValidBitmapSignature(std::ifstream & file)
+bool FileHelper::INTERNAL::hasValidBitmapSignature(std::ifstream & file)
 {
 	return readValueFromFile<WORD>(file, offsetof(BITMAPFILEHEADER, bfType)) == BITMAP_SIGNATURE;
 }
 
-uint8_t * FileHelper::readPixelDataFromBitmap(std::ifstream& file, const DWORD & dataOffset, const DWORD & imageSize)
+uint8_t * FileHelper::INTERNAL::readPixelDataFromBitmap(std::ifstream& file, const DWORD & dataOffset, const DWORD & imageSize)
 {
 	uint8_t* pixelData = new uint8_t[imageSize];
 	file.seekg(dataOffset);
@@ -141,17 +142,7 @@ uint8_t * FileHelper::readPixelDataFromBitmap(std::ifstream& file, const DWORD &
 	return pixelData;
 }
 
-void FileHelper::loadTextureData(GLuint textureID, const BMPData& textureData) {
-	glBindTexture(GL_TEXTURE_2D, textureID);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureData.width, textureData.height, 0, textureData.colorFormat, GL_UNSIGNED_BYTE, textureData.pixels);
-	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-std::ifstream FileHelper::openFile(const char * filename)
+std::ifstream FileHelper::INTERNAL::openFile(const std::string& filename)
 {
 	std::ifstream file = std::ifstream(filename, std::ios::in | std::ios::binary);
 	if (!file) {
@@ -165,16 +156,3 @@ std::string FileHelper::loadFileToString(const std::string& filename)
 	std::ifstream ifs(filename);
 	return std::string{ std::istreambuf_iterator<char>(ifs),std::istreambuf_iterator<char>() };
 }
-
-void FileHelper::cleanup()
-{
-	textures.clear();
-
-	//This crashes....
-	/*for (auto it = textureData.begin(); it != textureData.end(); it++) {
-	delete[] * it;
-	}*/
-}
-
-std::unordered_map<std::string, std::shared_ptr<ImageTexture>> FileHelper::textures;
-std::vector<uint8_t*> FileHelper::textureData;

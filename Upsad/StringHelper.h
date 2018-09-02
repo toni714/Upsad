@@ -3,6 +3,6 @@
 #include <string>
 #include <vector>
 
-namespace StringUtil {
+namespace StringHelper {
 	std::vector<std::string> splitString(std::string input, const char* delimiter);
 }
