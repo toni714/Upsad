@@ -13,7 +13,6 @@ class StaticRenderer {
 private:
 	std::unordered_map<std::shared_ptr<RawModel>, std::vector<const Instance*>> queue;
 	StaticShader shader;
-	float inc;
 public:
 	StaticRenderer()noexcept;
 	void loadProjectionMatrix(const float& fov, const float& screenRatio, const float& nearPlane, const float& farPlane);

@@ -5,7 +5,6 @@
 
 StaticRenderer::StaticRenderer() noexcept
 {
-	inc = 0;//TODO remove this
 }
 
 void StaticRenderer::loadProjectionMatrix(const float& fov, const float& screenRatio, const float& nearPlane, const float& farPlane)
@@ -62,17 +61,7 @@ void StaticRenderer::prepareModel(std::shared_ptr<RawModel> model)
 
 void StaticRenderer::prepareInstance(const Instance* instance)
 {
-	glm::mat4 modelMatrix = glm::mat4(1.0);
-	modelMatrix = glm::translate(modelMatrix, instance->position);
-
-	modelMatrix = glm::scale(modelMatrix, glm::vec3(instance->scale*0.5f));
-
-	glm::vec3 rot = instance->rotation;
-	modelMatrix = glm::rotate(modelMatrix, rot.x, glm::vec3(1, 0, 0));
-	modelMatrix = glm::rotate(modelMatrix, rot.y + inc, glm::vec3(0, 1, 0));
-	modelMatrix = glm::rotate(modelMatrix, rot.z, glm::vec3(0, 0, 1));
-	//inc += 0.01f;
-	shader.loadModelMatrix(modelMatrix);
+	shader.loadModelMatrix(instance->getModelMatrix());
 	prepareTexture(instance->texturedModel->texture);
 }
 

@@ -6,4 +6,5 @@ RawModel::~RawModel()
 	glDeleteBuffers(1, &positionBufferID);
 	glDeleteBuffers(1, &uvBufferID);
 	glDeleteBuffers(1, &normalBufferID);
+	delete bounding;
 }

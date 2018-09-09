@@ -5,6 +5,8 @@
 
 #include <glm/gtc/constants.hpp>
 #include "Terrain.h"
+#include "CurrentGameStata.h"
+#include "World.h"
 #include <thread>
 #include <chrono>
 #include <iostream>
@@ -14,7 +16,6 @@ StaticRenderer* staticRenderer;
 TexturedModel* texModel;
 TexturedModel* texModel2;
 Instance* instance;
-std::vector<Instance*> instances;
 Camera* camera;
 float inc = 0;
 
@@ -57,7 +58,7 @@ void loadModel() {
 	for (int i = 0; i < 100; i++) {
 		float x = ((rand() / (float)RAND_MAX) - 0.5f) * 100;
 		float z = ((rand() / (float)RAND_MAX) - 0.5f) * 100;
-		instances.push_back(new Instance(texModel2, glm::vec3(x, -2, z), glm::vec3(0, 0, 0), 1));
+		CurrentGameState::world->instances.push_back(new Instance(texModel2, glm::vec3(x, -2, z), glm::vec3(0, 0, 0), 1));
 	}
 }
 
@@ -65,28 +66,14 @@ void handleEvents() {
 	WindowManager::pollEvents();
 }
 
-/*void moveCamera() {
-	camera->getNextPosition();
-	staticRenderer->loadCamera(*camera);
-}*/
-
 void update() {
-	glm::vec3 nextPosition=camera->getNextPosition();
-	bool collision = false;
-	for (const auto& _instance : instances) {
-		if (_instance->collidesWith(nextPosition)) {
-			collision = true;
-		}
-	}
-	if (!collision) {
-		camera->position = nextPosition;
-	}
+	camera->update();
 	staticRenderer->loadCamera(*camera);
 }
 
 void draw() {
 	staticRenderer->addInstance(instance);
-	for (const auto& _instance : instances) {
+	for (const auto& _instance : CurrentGameState::world->instances) {
 		staticRenderer->addInstance(_instance);
 	}
 	staticRenderer->render();

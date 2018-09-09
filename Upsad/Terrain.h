@@ -8,6 +8,7 @@
 #include "Vertex.h"
 #include "MathHelper.h"
 #include "ModelData.h"
+#include "CylinerCollision.h"
 #include <iostream>
 #include <glm/gtx/string_cast.hpp>
 #include <stdexcept>
@@ -80,7 +81,7 @@ public:
 			vertices.push_back(Vertex(positions[i], uvs[i], normals[i]));
 		}
 
-		ModelData data = ModelData(vertices, indices, LimitBox(0,0,0,0,0,0));//todo implement bounding
+		ModelData data = ModelData(vertices, indices, new CylinderCollision(0,0,1));//todo implement bounding
 
 		return ModelHelper::loadModelDataToRawModel(data);
 	}
