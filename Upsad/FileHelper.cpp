@@ -5,7 +5,6 @@
 #include "StringHelper.h"
 #include "OpenGLHelper.h"
 #include "ModelHelper.h"
-#include "CylinerCollision.h"
 
 ModelData FileHelper::getModelDataFromFile(const std::string& filename) {
 	std::vector<GLuint> vertexIndices, uvIndices, normalIndices;
@@ -18,9 +17,6 @@ ModelData FileHelper::getModelDataFromFile(const std::string& filename) {
 	std::string fileContent = FileHelper::loadFileToString(filename);
 	std::vector<std::string> lines = StringHelper::splitString(fileContent.c_str(), "\n");
 
-	float top = 0;
-	float bottom = 0;
-
 	for (const auto& line : lines) {
 		std::vector<std::string> pieces = StringHelper::splitString(line, " ");
 		if (pieces[0] == "v") {
@@ -28,8 +24,6 @@ ModelData FileHelper::getModelDataFromFile(const std::string& filename) {
 			double y = std::stod(pieces[2]);
 			double z = std::stod(pieces[3]);
 			temp_vertices.push_back(glm::vec3(x, y, z));
-			if (y - bottom)bottom = y;
-			if (y > top)top = y;
 		}
 		else if (pieces[0] == "vt") {
 			temp_uvs.push_back(glm::vec2(std::stod(pieces[1]), std::stod(pieces[2])));
@@ -49,9 +43,6 @@ ModelData FileHelper::getModelDataFromFile(const std::string& filename) {
 			temp_faces.push_back(triangle);
 		}
 	}
-
-	//TODO load bounding from file
-	CylinderCollision* bounding = new CylinderCollision(top, bottom, 1.5);//TODO calculate actual radius
 
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
@@ -75,7 +66,7 @@ ModelData FileHelper::getModelDataFromFile(const std::string& filename) {
 			}
 		}
 	}
-	return ModelData(vertices, indices, bounding);
+	return ModelData(vertices, indices);
 }
 
 BMPData FileHelper::getBMPDataFromFile(const std::string& filename)

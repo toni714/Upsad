@@ -55,7 +55,7 @@ std::shared_ptr<RawModel> ModelHelper::loadModelDataToRawModel(const ModelData& 
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);	//Is this good Practice?
 
 	glBindVertexArray(0);	//Unbind VAO (Safety)
-	return std::make_shared<RawModel>(vaoID, modelData.indices.size(), positionsBuffer, uvsBuffer, normalsBuffer, modelData.bounding);
+	return std::make_shared<RawModel>(vaoID, modelData.indices.size(), positionsBuffer, uvsBuffer, normalsBuffer);
 }
 
 void ModelHelper::cleanup()

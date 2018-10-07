@@ -144,13 +144,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Collideable.cpp" />
-    <ClCompile Include="CurrentGameState.cpp" />
-    <ClCompile Include="CylinerCollision.cpp" />
     <ClCompile Include="FileHelper.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="ImageTexture.cpp" />
-    <ClCompile Include="Instance.cpp" />
     <ClCompile Include="Keys.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MathHelper.cpp" />
@@ -164,14 +160,9 @@
     <ClCompile Include="TextureHelper.cpp" />
     <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="WindowManager.cpp" />
-    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActiveObject.h" />
-    <ClInclude Include="Collideable.h" />
-    <ClInclude Include="CollisionShape.h" />
-    <ClInclude Include="CurrentGameStata.h" />
-    <ClInclude Include="CylinerCollision.h" />
     <ClInclude Include="MathHelper.h" />
     <ClInclude Include="ModelHelper.h" />
     <ClInclude Include="Object3D.h" />
@@ -195,7 +186,6 @@
     <ClInclude Include="TextureHelper.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="WindowManager.h" />
-    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.frag" />
